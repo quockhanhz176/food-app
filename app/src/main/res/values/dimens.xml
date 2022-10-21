@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="recipe_food_title_margin_start">20dp</dimen>
+    <dimen name="recipe_food_title_margin_bottom">40dp</dimen>
+    <dimen name="recipe_food_description_padding">20dp</dimen>
+
+    <dimen name="recipe_scene_description_food_image_height">60dp</dimen>
+
+    <dimen name="recipe_food_title_text_size">40sp</dimen>
+</resources>
