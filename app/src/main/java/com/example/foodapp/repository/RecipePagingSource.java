@@ -5,8 +5,14 @@ import androidx.annotation.Nullable;
 import androidx.paging.PagingState;
 import androidx.paging.rxjava3.RxPagingSource;
 
+import com.example.foodapp.repository.api.enums.Cuisine;
+import com.example.foodapp.repository.api.enums.Flavor;
+import com.example.foodapp.repository.api.enums.Intolerance;
+import com.example.foodapp.repository.api.enums.MealType;
 import com.example.foodapp.repository.model.Recipe;
 import com.example.foodapp.repository.model.RecipeResponse;
+
+import java.util.Collection;
 
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -14,13 +20,29 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class RecipePagingSource extends RxPagingSource<Integer, Recipe> {
 
     @NonNull
-    private RecipeRepository repo;
+    private final RecipeRepository repo;
     @NonNull
-    private String query;
+    private final String query;
 
-    public RecipePagingSource(@NonNull RecipeRepository repo, @NonNull String query) {
+    private final Collection<Cuisine> cuisines;
+    private final Collection<Flavor> flavors;
+    private final Collection<Intolerance> intolerances;
+    private final Collection<MealType> mealTypes;
+
+    public RecipePagingSource(
+            @NonNull RecipeRepository repo,
+            @NonNull String query,
+            @Nullable Collection<Cuisine> cuisines,
+            @Nullable Collection<Flavor> flavors,
+            @Nullable Collection<Intolerance> intolerances,
+            @Nullable Collection<MealType> mealTypes
+    ) {
         this.repo = repo;
         this.query = query;
+        this.cuisines = cuisines;
+        this.flavors = flavors;
+        this.intolerances = intolerances;
+        this.mealTypes = mealTypes;
     }
 
     @NonNull
@@ -33,13 +55,9 @@ public class RecipePagingSource extends RxPagingSource<Integer, Recipe> {
             nextPageNumber = 1;
         }
 
-        return repo.searchRecipe(query, nextPageNumber)
+        return repo.searchRecipe(query, cuisines, flavors, intolerances, mealTypes, nextPageNumber)
                 .subscribeOn(Schedulers.io())
-                .map(
-                        response -> {
-                            return toLoadResult(response);
-                        }
-                )
+                .map(this::toLoadResult)
                 .onErrorReturn(LoadResult.Error::new);
     }
 

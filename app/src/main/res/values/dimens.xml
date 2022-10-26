@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="recipe_food_title_margin_start">20dp</dimen>
-    <dimen name="recipe_food_title_margin_bottom">40dp</dimen>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="recipe_food_food_image_margin">30dp</dimen>
+    <dimen name="recipe_food_food_image_height_percent">.66</dimen>
+    <dimen name="recipe_food_food_image_corner">10dp</dimen>
+    <dimen name="recipe_food_button_height">60dp</dimen>
+    <dimen name="recipe_food_cv_button_margin_bottom">40dp</dimen>
+    <dimen name="recipe_food_cv_button_padding">12dp</dimen>
     <dimen name="recipe_food_description_padding">20dp</dimen>
 
     <dimen name="recipe_scene_description_food_image_height">60dp</dimen>
 
-    <dimen name="recipe_food_title_text_size">40sp</dimen>
+    <dimen name="recipe_food_title_text_size">20sp</dimen>
 </resources>
