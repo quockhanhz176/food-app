@@ -3,27 +3,90 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/cultured"
     app:layoutDescription="@xml/recipe_layout_scene">
 
-    <ImageView
-        android:id="@+id/foodIv"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/foodImageMcv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/orange"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="0dp"
+        app:cardCornerRadius="@dimen/recipe_food_food_image_corner"
+        app:contentPadding="@dimen/recipe_food_cv_button_padding"
+        app:layout_constraintHeight_percent="@dimen/recipe_food_food_image_height_percent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/foodTitleTv"
-        android:layout_width="wrap_content"
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/foodSiv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cropToPadding="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/orange"
+            app:shapeAppearanceOverlay="@style/roundedImageView" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/foodTitleMcv"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/recipe_food_title_margin_start"
-        android:layout_marginBottom="@dimen/recipe_food_title_margin_bottom"
-        android:text="Orange"
-        android:textColor="@color/white"
-        android:textSize="@dimen/recipe_food_title_text_size"
+        app:cardCornerRadius="@dimen/recipe_food_food_image_corner"
+        app:contentPadding="@dimen/recipe_food_cv_button_padding"
+        app:layout_constraintBottom_toTopOf="@id/likeButtonMcv"
+        app:layout_constraintEnd_toEndOf="@id/foodImageMcv"
+        app:layout_constraintStart_toStartOf="@id/foodImageMcv"
+        app:layout_constraintTop_toBottomOf="@id/foodImageMcv">
+
+        <TextView
+            android:id="@+id/foodTitleTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Orange"
+            android:textSize="@dimen/recipe_food_title_text_size" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/likeButtonMcv"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/recipe_food_button_height"
+        android:layout_marginBottom="@dimen/recipe_food_cv_button_margin_bottom"
+        app:cardCornerRadius="@dimen/recipe_food_food_image_corner"
+        app:cardElevation="0dp"
+        app:contentPadding="@dimen/recipe_food_cv_button_padding"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@id/saveButtonMcv"
+        app:layout_constraintStart_toStartOf="@id/foodImageMcv"
+        app:layout_constraintWidth_percent=".4"
+        app:strokeColor="@color/black">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/heart" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/saveButtonMcv"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/recipe_food_button_height"
+        android:layout_marginBottom="@dimen/recipe_food_cv_button_margin_bottom"
+        app:cardCornerRadius="@dimen/recipe_food_food_image_corner"
+        app:cardElevation="0dp"
+        app:contentPadding="@dimen/recipe_food_cv_button_padding"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toEndOf="@id/foodImageMcv"
+        app:layout_constraintStart_toEndOf="@id/likeButtonMcv"
+        app:layout_constraintWidth_percent=".4"
+        app:strokeColor="@color/black">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/save" />
+    </com.google.android.material.card.MaterialCardView>
 
     <ScrollView
         android:id="@+id/descriptionSv"
@@ -33,7 +96,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:padding="@dimen/recipe_food_description_padding">
 
             <TextView

@@ -15,8 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.foodapp.R;
+import com.example.foodapp.repository.api.enums.Cuisine;
+import com.example.foodapp.repository.api.enums.Intolerance;
+import com.example.foodapp.repository.api.enums.MealType;
 import com.example.foodapp.ui.adapter.RecipeAdapter;
 import com.example.foodapp.viewmodel.RecipeViewModel;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
@@ -35,6 +42,7 @@ public class RecipeFragment extends Fragment {
         recipeViewModel = new ViewModelProvider(getActivity()).get(RecipeViewModel.class);
         bindView();
         setupViewPager();
+
         return layout;
     }
 
@@ -62,7 +70,6 @@ public class RecipeFragment extends Fragment {
         });
 
         surfVp2.setAdapter(adapter);
-        surfVp2.setUserInputEnabled(false);
         surfVp2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             private RecipeAdapter.RecipeViewHolder lastViewHolder;
             private int lastPosition = -1;
@@ -82,8 +89,11 @@ public class RecipeFragment extends Fragment {
                 }
             }
         });
+
+//        recipeViewModel.setSearchParams("fish", null, null, Arrays.asList(Intolerance.Egg), Arrays.asList(MealType.MainCourse));
+        recipeViewModel.setSearchParams("", Collections.singletonList(Cuisine.Vietnamese), null, null, null);
         disposable.add(
-                recipeViewModel.recipeFlowable.subscribe(
+                recipeViewModel.getRecipeFlowable().subscribe(
                         recipePagingData -> adapter.submitData(getLifecycle(), recipePagingData)
                 )
         );

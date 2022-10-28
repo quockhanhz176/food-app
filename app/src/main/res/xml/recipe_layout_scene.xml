@@ -4,20 +4,26 @@
 
     <ConstraintSet android:id="@+id/introductionCs">
         <Constraint
-            android:id="@id/foodTitleTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/recipe_food_title_margin_start"
-            android:layout_marginBottom="@dimen/recipe_food_title_margin_bottom"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-            <CustomAttribute
-                app:attributeName="textColor"
-                app:customColorValue="@color/white" />
+            android:id="@id/foodImageMcv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/recipe_food_food_image_margin"
+            android:layout_marginTop="@dimen/recipe_food_food_image_margin"
+            android:layout_marginEnd="@dimen/recipe_food_food_image_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="@dimen/recipe_food_food_image_height_percent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <Constraint android:id="@id/foodTitleMcv">
+            <PropertySet android:visibility="visible" />
         </Constraint>
-        <Constraint
-            android:id="@id/foodIv"
-            android:layout_height="match_parent" />
+        <Constraint android:id="@id/likeButtonMcv">
+            <PropertySet android:visibility="visible" />
+        </Constraint>
+        <Constraint android:id="@id/saveButtonMcv">
+            <PropertySet android:visibility="visible" />
+        </Constraint>
         <Constraint
             android:id="@id/descriptionSv"
             android:layout_width="match_parent"
@@ -28,30 +34,52 @@
 
     <ConstraintSet android:id="@+id/descriptionCs">
         <Constraint
-            android:id="@id/foodTitleTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/recipe_food_title_margin_start"
-            app:layout_constraintBottom_toBottomOf="@id/foodIv"
-            app:layout_constraintTop_toTopOf="@id/foodIv">
-            <CustomAttribute
-                app:attributeName="textColor"
-                app:customColorValue="@color/transparent" />
+            android:id="@id/foodImageMcv"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/recipe_scene_description_food_image_height"
+            android:layout_marginStart="@dimen/recipe_food_food_image_margin"
+            android:layout_marginTop="@dimen/recipe_food_food_image_margin"
+            android:layout_marginEnd="@dimen/recipe_food_food_image_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <Constraint android:id="@id/foodTitleMcv">
+            <PropertySet android:visibility="invisible" />
         </Constraint>
-        <Constraint
-            android:id="@id/foodIv"
-            android:layout_height="@dimen/recipe_scene_description_food_image_height" />
+        <Constraint android:id="@id/likeButtonMcv">
+            <PropertySet android:visibility="invisible" />
+        </Constraint>
+        <Constraint android:id="@id/saveButtonMcv">
+            <PropertySet android:visibility="invisible" />
+        </Constraint>
         <Constraint
             android:id="@id/descriptionSv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/foodIv" />
+            app:layout_constraintTop_toBottomOf="@id/foodImageMcv" />
     </ConstraintSet>
 
     <Transition
         app:constraintSetEnd="@id/descriptionCs"
         app:constraintSetStart="@+id/introductionCs">
         <OnSwipe app:dragDirection="dragUp" />
+        <KeyFrameSet>
+            <KeyAttribute
+                app:framePosition="5"
+                android:alpha="0"
+                app:motionTarget="@id/likeButtonMcv">
+            </KeyAttribute>
+            <KeyAttribute
+                app:framePosition="5"
+                android:alpha="0"
+                app:motionTarget="@id/saveButtonMcv">
+            </KeyAttribute>
+            <KeyAttribute
+                app:framePosition="5"
+                android:alpha="0"
+                app:motionTarget="@id/foodTitleMcv">
+            </KeyAttribute>
+        </KeyFrameSet>
     </Transition>
 </MotionScene>
