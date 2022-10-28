@@ -1,4 +1,4 @@
-package com.example.foodapp;
+package com.example.foodapp.ui;
 
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GestureDetectorCompat;
 
+import com.example.foodapp.R;
 import com.example.foodapp.databinding.ActivityMainBinding;
 import com.example.foodapp.ui.sign_up.SignUpFragment;
 
