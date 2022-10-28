@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="transparent">#00000000</color>
+    <color name="spanishGray">#9796A1</color>
+    <color name="orange">#FE724C</color>
 </resources>

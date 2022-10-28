@@ -1,4 +1,4 @@
-package com.example.foodapp.ui;
+package com.example.foodapp;
 
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -9,16 +9,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GestureDetectorCompat;
 
-import com.example.foodapp.R;
+import com.example.foodapp.databinding.ActivityMainBinding;
+import com.example.foodapp.ui.sign_up.SignUpFragment;
 
 public class MainActivity extends AppCompatActivity {
 
     private GestureDetectorCompat gestureDetectorCompat;
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         Window window = getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -27,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, new RecipeFragment())
+                    .replace(R.id.fragment_container, new SignUpFragment())
                     .commitNow();
         }
     }
