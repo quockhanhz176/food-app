@@ -16,4 +16,13 @@ public class Equipment {
     public String getLocalizedName() {
         return localizedName;
     }
+
+    @Override
+    public String toString() {
+        return "Equipment{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", localizedName='" + localizedName + '\'' +
+                '}';
+    }
 }

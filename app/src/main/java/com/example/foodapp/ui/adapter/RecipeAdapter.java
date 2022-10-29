@@ -49,6 +49,10 @@ public class RecipeAdapter extends PagingDataAdapter<Recipe, RecipeAdapter.Recip
         private TextView foodTitleTv;
         private TextView descriptionTv;
 
+        private TextView readyTimeContentTv;
+        private TextView servingsContent;
+        private TextView healthContentScore;
+
         public RecipeViewHolder(@NonNull View itemView) {
             super(itemView);
             bindView();
@@ -58,12 +62,37 @@ public class RecipeAdapter extends PagingDataAdapter<Recipe, RecipeAdapter.Recip
             foodTitleTv.setText(recipe.getTitle());
             descriptionTv.setText(recipe.toString());
             Picasso.get().load(recipe.getImage()).into(foodIv);
+
+            readyTimeContentTv.setText(
+                    itemView.getResources().getQuantityString(
+                            R.plurals.recipe_layout_subtitle_ready_time_content,
+                            recipe.getReadyInMinutes(),
+                            recipe.getReadyInMinutes()
+                    )
+            );
+            servingsContent.setText(
+                    itemView.getResources().getQuantityString(
+                            R.plurals.recipe_layout_subtitle_servings_content,
+                            recipe.getServings(),
+                            recipe.getServings()
+                    )
+            );
+            healthContentScore.setText(
+                    itemView.getResources().getString(
+                            R.string.recipe_layout_subtitle_health_score_content,
+                            recipe.getHealthScore()
+                    )
+            );
         }
 
         private void bindView() {
             foodIv = itemView.findViewById(R.id.foodSiv);
             foodTitleTv = itemView.findViewById(R.id.foodTitleTv);
             descriptionTv = itemView.findViewById(R.id.descriptionTv);
+
+            readyTimeContentTv = itemView.findViewById(R.id.readyTimeContentTv);
+            servingsContent = itemView.findViewById(R.id.servingContentTv);
+            healthContentScore = itemView.findViewById(R.id.healthScoreContentTv);
         }
 
         public void resetLayout() {

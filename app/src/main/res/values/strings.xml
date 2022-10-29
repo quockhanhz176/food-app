@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">FoodApp</string>
+    <string name="default_string">Orange</string>
+    <string name="recipe_layout_subtitle_ready_time_title">Ready time:\u0020</string>
+    <string name="recipe_layout_subtitle_servings_title">Servings:\u0020</string>
+    <string name="recipe_layout_subtitle_health_score_title">Health score:\u0020</string>
+    <plurals name="recipe_layout_subtitle_ready_time_content">
+        <item quantity="one">%d minute(s).</item>
+        <item quantity="other">%d minutes.</item>
+    </plurals>
+    <plurals name="recipe_layout_subtitle_servings_content">
+        <item quantity="one">%d sering</item>
+        <item quantity="other">%d servings</item>
+    </plurals>
+    <string name="recipe_layout_subtitle_health_score_content">%d &#9733;</string>
 </resources>

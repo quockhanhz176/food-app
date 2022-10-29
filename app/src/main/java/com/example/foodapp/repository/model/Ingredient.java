@@ -16,4 +16,13 @@ public class Ingredient {
     public String getLocalizedName() {
         return localizedName;
     }
+
+    @Override
+    public String toString() {
+        return "Ingredient{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", localizedName='" + localizedName + '\'' +
+                '}';
+    }
 }
