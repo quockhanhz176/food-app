@@ -1,7 +1,6 @@
 package com.example.foodapp.ui;
 
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -10,6 +9,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GestureDetectorCompat;
 
 import com.example.foodapp.R;
+import com.google.firebase.FirebaseApp;
 import com.example.foodapp.databinding.ActivityMainBinding;
 import com.example.foodapp.ui.home.HomeFragment;
 import com.example.foodapp.ui.login.LoginFragment;
@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        initFirebase();
 
         Window window = getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -47,8 +49,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return false;
+    private void initFirebase() {
+        FirebaseApp.initializeApp(this);
     }
 }

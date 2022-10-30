@@ -18,6 +18,7 @@ import com.example.foodapp.R;
 import com.example.foodapp.ui.adapter.RecipeAdapter;
 import com.example.foodapp.viewmodel.RecipeViewModel;
 
+
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class RecipeFragment extends Fragment {
@@ -35,6 +36,7 @@ public class RecipeFragment extends Fragment {
         recipeViewModel = new ViewModelProvider(getActivity()).get(RecipeViewModel.class);
         bindView();
         setupViewPager();
+
         return layout;
     }
 
@@ -62,7 +64,6 @@ public class RecipeFragment extends Fragment {
         });
 
         surfVp2.setAdapter(adapter);
-        surfVp2.setUserInputEnabled(false);
         surfVp2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             private RecipeAdapter.RecipeViewHolder lastViewHolder;
             private int lastPosition = -1;
@@ -82,8 +83,12 @@ public class RecipeFragment extends Fragment {
                 }
             }
         });
+
+//        recipeViewModel.setSearchParams("fish", null, null, Arrays.asList(Intolerance.Egg), Arrays.asList(MealType.MainCourse));
+//        recipeViewModel.setSearchParams("", Collections.singletonList(Cuisine.Mexican), null, null, null);
+        recipeViewModel.setSearchParams("chicken", null, null, null, null);
         disposable.add(
-                recipeViewModel.recipeFlowable.subscribe(
+                recipeViewModel.getRecipeFlowable().subscribe(
                         recipePagingData -> adapter.submitData(getLifecycle(), recipePagingData)
                 )
         );

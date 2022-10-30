@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -49,6 +48,7 @@
             android:layout_marginStart="-40dp"
             app:srcCompat="@drawable/group_18153__1___1_" />
     </LinearLayout>
+
     <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="38dp"
         android:layout_height="38dp"
@@ -56,8 +56,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/back" />
-
-
 
 
     <TextView
@@ -102,12 +100,12 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="15dp"
         android:layout_marginTop="12dp"
+        android:background="@drawable/bg_edt"
         android:paddingHorizontal="10dp"
+        android:paddingVertical="20dp"
         android:text="Eljad Eendaz"
         android:textColor="#000000"
         android:textSize="17sp"
-        android:paddingVertical="20dp"
-        android:background="@drawable/bg_edt"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/tvFullName" />
 
@@ -129,13 +127,13 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="15dp"
         android:layout_marginTop="12dp"
+        android:background="@drawable/bg_edt2"
         android:paddingHorizontal="10dp"
+        android:paddingVertical="20dp"
         android:text="prelookstudio@gmail.com"
         android:textColor="#000000"
         android:textFontWeight="400"
         android:textSize="17sp"
-        android:paddingVertical="20dp"
-        android:background="@drawable/bg_edt2"
         app:layout_constraintTop_toBottomOf="@id/tvEmail" />
 
     <TextView
@@ -156,17 +154,17 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="15dp"
         android:layout_marginTop="12dp"
+        android:background="@drawable/bg_edt2"
         android:paddingHorizontal="10dp"
+        android:paddingVertical="20dp"
         android:text="+1(783)09868786"
         android:textColor="#000000"
         android:textFontWeight="400"
         android:textSize="17sp"
-        android:paddingVertical="20dp"
-        android:background="@drawable/bg_edt2"
         app:layout_constraintTop_toBottomOf="@id/tvPhone" />
 
 
     app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

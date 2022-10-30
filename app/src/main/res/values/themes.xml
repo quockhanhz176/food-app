@@ -40,4 +40,28 @@
         <item name="android:background">@drawable/bg_button_normal</item>
     </style>
 
+    <style name="RoundTopCardViewStyle" parent="@style/Widget.MaterialComponents.CardView">
+        <item name="shapeAppearanceOverlay">@style/RoundTopStyle</item>
+    </style>
+
+    <style name="RoundBottomCardViewStyle" parent="@style/Widget.MaterialComponents.CardView">
+        <item name="shapeAppearanceOverlay">@style/RoundBottomStyle</item>
+    </style>
+
+    <style name="RoundTopStyle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">@dimen/recipe_food_food_image_corner</item>
+        <item name="cornerSizeTopLeft">@dimen/recipe_food_food_image_corner</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+    </style>
+
+    <style name="RoundBottomStyle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeBottomRight">@dimen/recipe_food_food_image_corner</item>
+        <item name="cornerSizeBottomLeft">@dimen/recipe_food_food_image_corner</item>
+        <item name="cornerSizeTopRight">0dp</item>
+        <item name="cornerSizeTopLeft">0dp</item>
+    </style>
+
 </resources>
