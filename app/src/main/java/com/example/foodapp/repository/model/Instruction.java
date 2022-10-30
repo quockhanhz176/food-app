@@ -24,4 +24,14 @@ public class Instruction {
     public List<Equipment> getEquipment() {
         return equipment;
     }
+
+    @Override
+    public String toString() {
+        return "Instruction{" +
+                "number=" + number +
+                ", step='" + step + '\'' +
+                ", ingredients=" + ingredients +
+                ", equipment=" + equipment +
+                '}';
+    }
 }

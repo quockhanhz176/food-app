@@ -7,28 +7,31 @@
             android:id="@id/foodImageMcv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginStart="@dimen/recipe_food_food_image_margin"
-            android:layout_marginTop="@dimen/recipe_food_food_image_margin"
-            android:layout_marginEnd="@dimen/recipe_food_food_image_margin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_percent="@dimen/recipe_food_food_image_height_percent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/recipe_food_food_image_margin_horizontal"
+            android:layout_marginTop="@dimen/recipe_food_food_image_margin_top"
+            android:layout_marginEnd="@dimen/recipe_food_food_image_margin_horizontal"
+            android:layout_marginBottom="@dimen/recipe_food_food_image_margin_bottom"
+            app:layout_constraintBottom_toTopOf="@id/foodTitleMcv"
             app:layout_constraintTop_toTopOf="parent" />
-        <Constraint android:id="@id/foodTitleMcv">
-            <PropertySet android:visibility="visible" />
-        </Constraint>
-        <Constraint android:id="@id/likeButtonMcv">
-            <PropertySet android:visibility="visible" />
-        </Constraint>
-        <Constraint android:id="@id/saveButtonMcv">
-            <PropertySet android:visibility="visible" />
-        </Constraint>
         <Constraint
-            android:id="@id/descriptionSv"
-            android:layout_width="match_parent"
+            android:id="@id/foodTitleMcv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/recipe_food_cv_title_margin_bottom"
+            app:layout_constraintBottom_toTopOf="@id/likeButtonMcv"
+            app:layout_constraintEnd_toEndOf="@id/foodImageMcv"
+            app:layout_constraintStart_toStartOf="@id/foodImageMcv">
+            <PropertySet android:visibility="visible" />
+        </Constraint>
+        <Constraint android:id="@id/likeButtonMcv" />
+        <Constraint android:id="@id/saveButtonMcv" />
+        <Constraint
+            android:id="@id/descriptionMcv"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/foodImageMcv"
+            app:layout_constraintStart_toStartOf="@id/foodImageMcv"
             app:layout_constraintTop_toBottomOf="parent" />
     </ConstraintSet>
 
@@ -37,9 +40,9 @@
             android:id="@id/foodImageMcv"
             android:layout_width="match_parent"
             android:layout_height="@dimen/recipe_scene_description_food_image_height"
-            android:layout_marginStart="@dimen/recipe_food_food_image_margin"
-            android:layout_marginTop="@dimen/recipe_food_food_image_margin"
-            android:layout_marginEnd="@dimen/recipe_food_food_image_margin"
+            android:layout_marginStart="@dimen/recipe_food_food_image_margin_horizontal"
+            android:layout_marginTop="@dimen/recipe_food_food_image_margin_horizontal"
+            android:layout_marginEnd="@dimen/recipe_food_food_image_margin_horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -52,11 +55,17 @@
         <Constraint android:id="@id/saveButtonMcv">
             <PropertySet android:visibility="invisible" />
         </Constraint>
+        <Constraint android:id="@id/shareButtonMcv">
+            <PropertySet android:visibility="invisible" />
+        </Constraint>
         <Constraint
-            android:id="@id/descriptionSv"
-            android:layout_width="match_parent"
+            android:id="@id/descriptionMcv"
+            android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="@dimen/recipe_food_food_image_margin_bottom"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/foodImageMcv"
+            app:layout_constraintStart_toStartOf="@id/foodImageMcv"
             app:layout_constraintTop_toBottomOf="@id/foodImageMcv" />
     </ConstraintSet>
 
@@ -68,15 +77,19 @@
             <KeyAttribute
                 android:alpha="0"
                 app:framePosition="5"
-                app:motionTarget="@id/likeButtonMcv"></KeyAttribute>
+                app:motionTarget="@id/foodTitleMcv" />
             <KeyAttribute
                 android:alpha="0"
                 app:framePosition="5"
-                app:motionTarget="@id/saveButtonMcv"></KeyAttribute>
+                app:motionTarget="@id/likeButtonMcv" />
             <KeyAttribute
                 android:alpha="0"
                 app:framePosition="5"
-                app:motionTarget="@id/foodTitleMcv"></KeyAttribute>
+                app:motionTarget="@id/saveButtonMcv" />
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="5"
+                app:motionTarget="@id/shareButtonMcv" />
         </KeyFrameSet>
     </Transition>
 </MotionScene>

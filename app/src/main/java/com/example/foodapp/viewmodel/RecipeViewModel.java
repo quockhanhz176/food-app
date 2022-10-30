@@ -30,13 +30,13 @@ public class RecipeViewModel extends AndroidViewModel {
 
     private Flowable<PagingData<Recipe>> recipeFlowable;
 
+    public Flowable<PagingData<Recipe>> getRecipeFlowable() {
+        return recipeFlowable;
+    }
+
     public RecipeViewModel(@NonNull Application application) {
         super(application);
         recipeRepository = new RecipeRepository(application);
-    }
-
-    public Flowable<PagingData<Recipe>> getRecipeFlowable() {
-        return recipeFlowable;
     }
 
     public void setSearchParams(
@@ -48,9 +48,8 @@ public class RecipeViewModel extends AndroidViewModel {
     ) {
         CoroutineScope viewModelScope = ViewModelKt.getViewModelScope(this);
         Pager<Integer, Recipe> pager = new Pager<>(
-                new PagingConfig(20),
-                () -> new RecipePagingSource(recipeRepository, query, cuisines, flavors,
-                        intolerances, mealTypes)
+                new PagingConfig(5),
+                () -> new RecipePagingSource(recipeRepository, query, cuisines, flavors, intolerances, mealTypes)
         );
         recipeFlowable = PagingRx.getFlowable(pager);
         PagingRx.cachedIn(recipeFlowable, viewModelScope);
