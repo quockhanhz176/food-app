@@ -18,17 +18,18 @@ import com.squareup.picasso.Picasso;
 
 public class RecipeAdapter extends PagingDataAdapter<Recipe, RecipeAdapter.RecipeViewHolder> {
 
+    private final MotionLayout.TransitionListener transitionListener;
+
     public RecipeAdapter(MotionLayout.TransitionListener transitionListener) {
         super(new RecipeComparator());
         this.transitionListener = transitionListener;
     }
 
-    private final MotionLayout.TransitionListener transitionListener;
-
     @NonNull
     @Override
     public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        MotionLayout view = (MotionLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_layout, parent, false);
+        MotionLayout view =
+                (MotionLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_layout, parent, false);
         if (transitionListener != null) {
             view.setTransitionListener(transitionListener);
         }
@@ -38,7 +39,9 @@ public class RecipeAdapter extends PagingDataAdapter<Recipe, RecipeAdapter.Recip
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
         Recipe recipe = getItem(position);
-        if (recipe != null) holder.setRecipe(recipe);
+        if (recipe != null) {
+            holder.setRecipe(recipe);
+        }
     }
 
     public static class RecipeViewHolder extends RecyclerView.ViewHolder {

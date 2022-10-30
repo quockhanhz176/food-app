@@ -80,7 +80,8 @@ public class RecipePagingSource extends RxPagingSource<Integer, Recipe> {
             return null;
         }
 
-        LoadResult.Page<Integer, Recipe> anchorPage = pagingState.closestPageToPosition(anchorPosition);
+        LoadResult.Page<Integer, Recipe> anchorPage =
+                pagingState.closestPageToPosition(anchorPosition);
         if (anchorPage == null) {
             return null;
         }

@@ -1,8 +1,6 @@
 package com.example.foodapp.ui;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -11,12 +9,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GestureDetectorCompat;
 
 import com.example.foodapp.R;
-import com.example.foodapp.repository.api.RecipeApiService;
-import com.example.foodapp.repository.api.enums.Cuisine;
-import com.example.foodapp.repository.api.enums.Intolerance;
-import com.example.foodapp.repository.api.enums.MealType;
-import com.example.foodapp.repository.model.Recipe;
-import com.example.foodapp.repository.api.repository.RecipeRepository;
+import com.google.firebase.FirebaseApp;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initFirebase();
 
         Window window = getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -38,5 +32,9 @@ public class MainActivity extends AppCompatActivity {
                     .replace(R.id.container, new RecipeFragment())
                     .commitNow();
         }
+    }
+
+    private void initFirebase() {
+        FirebaseApp.initializeApp(this);
     }
 }

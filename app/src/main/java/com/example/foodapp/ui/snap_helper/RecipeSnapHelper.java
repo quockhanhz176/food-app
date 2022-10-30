@@ -14,10 +14,12 @@ public class RecipeSnapHelper extends LinearSnapHelper {
     }
 
     @Override
-    public int findTargetSnapPosition(RecyclerView.LayoutManager layoutManager, int velocityX, int velocityY) {
+    public int findTargetSnapPosition(RecyclerView.LayoutManager layoutManager, int velocityX,
+                                      int velocityY) {
         View centerView = findSnapView(layoutManager);
-        if (centerView == null)
+        if (centerView == null) {
             return RecyclerView.NO_POSITION;
+        }
 
         int position = layoutManager.getPosition(centerView);
         int targetPosition = -1;
