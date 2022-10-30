@@ -8,17 +8,13 @@ import java.util.Objects;
 public class Recipe {
     private int id;
     private String title;
-
     private String image;
     private String imageType;
-
     private int readyInMinutes;
     private int servings;
-
     private int healthScore;
-
     private List<String> cuisines;
-    private List<Instruction> analyzedInstructions;
+    private List<AnalyzedInstruction> analyzedInstructions;
 
     public int getId() {
         return id;
@@ -52,7 +48,7 @@ public class Recipe {
         return cuisines;
     }
 
-    public List<Instruction> getAnalyzedInstructions() {
+    public List<AnalyzedInstruction> getAnalyzedInstructions() {
         return analyzedInstructions;
     }
 
