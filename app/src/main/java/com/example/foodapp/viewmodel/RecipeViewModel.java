@@ -13,10 +13,10 @@ import androidx.paging.rxjava3.PagingRx;
 
 import com.example.foodapp.repository.RecipePagingSource;
 import com.example.foodapp.repository.RecipeRepository;
-import com.example.foodapp.repository.api.enums.Cuisine;
-import com.example.foodapp.repository.api.enums.Flavor;
-import com.example.foodapp.repository.api.enums.Intolerance;
-import com.example.foodapp.repository.api.enums.MealType;
+import com.example.foodapp.repository.enums.Cuisine;
+import com.example.foodapp.repository.enums.Flavor;
+import com.example.foodapp.repository.enums.Intolerance;
+import com.example.foodapp.repository.enums.MealType;
 import com.example.foodapp.repository.model.Recipe;
 
 import java.util.Collection;

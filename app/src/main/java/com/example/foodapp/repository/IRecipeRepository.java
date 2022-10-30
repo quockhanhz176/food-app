@@ -1,4 +1,4 @@
-package com.example.foodapp.repository.api.repository;
+package com.example.foodapp.repository;
 
 import com.example.foodapp.AppConfig;
 import com.example.foodapp.repository.model.RecipeResult;
@@ -8,7 +8,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Query;
 
-public interface RecipeRepository {
+public interface IRecipeRepository {
     @Headers({
             "Accept: application/json",
             "User-Agent: FoodApp",

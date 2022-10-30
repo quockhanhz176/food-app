@@ -1,4 +1,4 @@
-package com.example.foodapp.repository.api.enums;
+package com.example.foodapp.repository.enums;
 
 public enum Cuisine implements FoodTag {
     African("African"),
@@ -28,7 +28,7 @@ public enum Cuisine implements FoodTag {
     Thai("Thai"),
     Vietnamese("Vietnamese");
 
-    public final String value;
+    private final String value;
 
     Cuisine(String value) {
         this.value = value;

@@ -5,10 +5,10 @@ import androidx.annotation.Nullable;
 import androidx.paging.PagingState;
 import androidx.paging.rxjava3.RxPagingSource;
 
-import com.example.foodapp.repository.api.enums.Cuisine;
-import com.example.foodapp.repository.api.enums.Flavor;
-import com.example.foodapp.repository.api.enums.Intolerance;
-import com.example.foodapp.repository.api.enums.MealType;
+import com.example.foodapp.repository.enums.Cuisine;
+import com.example.foodapp.repository.enums.Flavor;
+import com.example.foodapp.repository.enums.Intolerance;
+import com.example.foodapp.repository.enums.MealType;
 import com.example.foodapp.repository.model.Recipe;
 import com.example.foodapp.repository.model.RecipeResponse;
 

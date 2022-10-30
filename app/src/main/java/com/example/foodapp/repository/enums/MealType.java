@@ -1,4 +1,4 @@
-package com.example.foodapp.repository.api.enums;
+package com.example.foodapp.repository.enums;
 
 public enum MealType implements FoodTag {
     MainCourse("main course"),
@@ -12,7 +12,7 @@ public enum MealType implements FoodTag {
     Beverage("beverage"),
     Sauce("sauce");
 
-    public final String value;
+    private final String value;
 
     MealType(String value) {
         this.value = value;
