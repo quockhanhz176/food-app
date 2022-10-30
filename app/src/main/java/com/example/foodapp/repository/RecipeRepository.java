@@ -4,25 +4,37 @@ import android.app.Application;
 
 import androidx.annotation.Nullable;
 
-import com.example.foodapp.repository.api.RecipeApiService;
-import com.example.foodapp.repository.api.enums.Cuisine;
-import com.example.foodapp.repository.api.enums.Flavor;
-import com.example.foodapp.repository.api.enums.FoodTag;
-import com.example.foodapp.repository.api.enums.Intolerance;
-import com.example.foodapp.repository.api.enums.MealType;
+import com.example.foodapp.repository.enums.Cuisine;
+import com.example.foodapp.repository.enums.Flavor;
+import com.example.foodapp.repository.enums.FoodTag;
+import com.example.foodapp.repository.enums.Intolerance;
+import com.example.foodapp.repository.enums.MealType;
 import com.example.foodapp.repository.model.RecipeResponse;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Single;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RecipeRepository {
+
+    private static final String RECIPE_BASE_URL = "https://api.spoonacular.com";
+    private final IRecipeRepository recipeRepository;
 
     private Application application;
 
     public RecipeRepository(Application application) {
         this.application = application;
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(RECIPE_BASE_URL)
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create()).build();
+
+        recipeRepository = retrofit.create(IRecipeRepository.class);
     }
 
     public Single<RecipeResponse> searchRecipe(
@@ -42,9 +54,6 @@ public class RecipeRepository {
         String mealTypeString = mealTypes == null ? null :
                 mealTypes.stream().map(this::transformTag).collect(Collectors.joining(","));
 
-        RecipeApiService apiService = RecipeApiService.getInstance();
-        com.example.foodapp.repository.api.repository.RecipeRepository recipeRepository =
-                apiService.getRecipeRepository();
         return recipeRepository.complexSearch(
                 query + " " + flavorString,
                 nextPageNumber - 1,

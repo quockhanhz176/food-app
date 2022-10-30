@@ -1,13 +1,12 @@
-package com.example.foodapp.repository.api.enums;
+package com.example.foodapp.repository.enums;
 
 public enum Flavor implements FoodTag {
     Sweet("Sweet"),
     Salty("Salty"),
     Sour("Sour"),
-    Bitter("Bitter"),
-    Umami("Umami");
+    Bitter("Bitter");
 
-    public final String value;
+    private final String value;
 
     Flavor(String value) {
         this.value = value;

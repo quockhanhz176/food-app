@@ -1,4 +1,4 @@
-package com.example.foodapp.repository.api.enums;
+package com.example.foodapp.repository.enums;
 
 public enum Intolerance implements FoodTag {
     Dairy("Dairy"),
@@ -13,7 +13,7 @@ public enum Intolerance implements FoodTag {
     TreeNut("TreeNut"),
     Wheat("Wheat");
 
-    public final String value;
+    private final String value;
 
     Intolerance(String value) {
         this.value = value;

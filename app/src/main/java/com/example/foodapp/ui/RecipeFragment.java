@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.foodapp.R;
-import com.example.foodapp.repository.api.enums.Cuisine;
+import com.example.foodapp.repository.enums.Cuisine;
 import com.example.foodapp.ui.adapter.RecipeAdapter;
 import com.example.foodapp.viewmodel.RecipeViewModel;
 
