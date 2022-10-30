@@ -11,6 +11,13 @@ public class User {
 
     private UserPreference userPreference;
 
+    public User() {
+        email = "";
+        isFirstLogin = true;
+        avatar = "";
+        userPreference = new UserPreference();
+    }
+
     public User(String email, String avatar, UserPreference userPreference) {
         this.email = email;
         isFirstLogin = true;
@@ -37,5 +44,13 @@ public class User {
 
     public String getAvatar() {
         return avatar;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "email='" + email + '\'' +
+                ", avatar='" + avatar + '\'' +
+                '}';
     }
 }
