@@ -43,7 +43,8 @@ public class RecipeRepository {
                 mealTypes.stream().map(this::transformTag).collect(Collectors.joining(","));
 
         RecipeApiService apiService = RecipeApiService.getInstance();
-        com.example.foodapp.repository.api.repository.RecipeRepository recipeRepository = apiService.getRecipeRepository();
+        com.example.foodapp.repository.api.repository.RecipeRepository recipeRepository =
+                apiService.getRecipeRepository();
         return recipeRepository.complexSearch(
                 query + " " + flavorString,
                 nextPageNumber - 1,

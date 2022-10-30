@@ -22,7 +22,6 @@ import com.example.foodapp.repository.model.Recipe;
 import java.util.Collection;
 
 import io.reactivex.rxjava3.core.Flowable;
-import io.reactivex.rxjava3.core.Single;
 import kotlinx.coroutines.CoroutineScope;
 
 public class RecipeViewModel extends AndroidViewModel {
@@ -31,13 +30,13 @@ public class RecipeViewModel extends AndroidViewModel {
 
     private Flowable<PagingData<Recipe>> recipeFlowable;
 
-    public Flowable<PagingData<Recipe>> getRecipeFlowable() {
-        return recipeFlowable;
-    }
-
     public RecipeViewModel(@NonNull Application application) {
         super(application);
         recipeRepository = new RecipeRepository(application);
+    }
+
+    public Flowable<PagingData<Recipe>> getRecipeFlowable() {
+        return recipeFlowable;
     }
 
     public void setSearchParams(
@@ -50,7 +49,8 @@ public class RecipeViewModel extends AndroidViewModel {
         CoroutineScope viewModelScope = ViewModelKt.getViewModelScope(this);
         Pager<Integer, Recipe> pager = new Pager<>(
                 new PagingConfig(20),
-                () -> new RecipePagingSource(recipeRepository, query, cuisines, flavors, intolerances, mealTypes)
+                () -> new RecipePagingSource(recipeRepository, query, cuisines, flavors,
+                        intolerances, mealTypes)
         );
         recipeFlowable = PagingRx.getFlowable(pager);
         PagingRx.cachedIn(recipeFlowable, viewModelScope);

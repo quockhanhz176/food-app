@@ -1,8 +1,5 @@
 package com.example.foodapp.viewmodel.utils;
 
-import java.io.*;
-import java.security.*;
-
 // References: http://en.gravatar.com/site/implement/images/java/
 public class Gravatar {
     public static final String GRAVATAR_BASE_URL = "https://www.gravatar" +

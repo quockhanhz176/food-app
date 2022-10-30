@@ -74,14 +74,19 @@ public class Recipe {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Recipe)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Recipe)) {
+            return false;
+        }
         Recipe recipe = (Recipe) o;
         return id == recipe.id && readyInMinutes == recipe.readyInMinutes && servings == recipe.servings && healthScore == recipe.healthScore && title.equals(recipe.title) && image.equals(recipe.image) && imageType.equals(recipe.imageType) && cuisines.equals(recipe.cuisines) && analyzedInstructions.equals(recipe.analyzedInstructions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, image, imageType, readyInMinutes, servings, healthScore, cuisines, analyzedInstructions);
+        return Objects.hash(id, title, image, imageType, readyInMinutes, servings, healthScore,
+                cuisines, analyzedInstructions);
     }
 }

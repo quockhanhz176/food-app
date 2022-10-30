@@ -66,20 +66,17 @@
         <OnSwipe app:dragDirection="dragUp" />
         <KeyFrameSet>
             <KeyAttribute
-                app:framePosition="5"
                 android:alpha="0"
-                app:motionTarget="@id/likeButtonMcv">
-            </KeyAttribute>
+                app:framePosition="5"
+                app:motionTarget="@id/likeButtonMcv"></KeyAttribute>
             <KeyAttribute
-                app:framePosition="5"
                 android:alpha="0"
-                app:motionTarget="@id/saveButtonMcv">
-            </KeyAttribute>
+                app:framePosition="5"
+                app:motionTarget="@id/saveButtonMcv"></KeyAttribute>
             <KeyAttribute
-                app:framePosition="5"
                 android:alpha="0"
-                app:motionTarget="@id/foodTitleMcv">
-            </KeyAttribute>
+                app:framePosition="5"
+                app:motionTarget="@id/foodTitleMcv"></KeyAttribute>
         </KeyFrameSet>
     </Transition>
 </MotionScene>

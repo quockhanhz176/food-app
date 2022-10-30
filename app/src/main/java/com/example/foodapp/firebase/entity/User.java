@@ -5,9 +5,9 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
 public class User {
-    private String email;
-    private boolean isFirstLogin;
-    private String avatar;
+    private final String email;
+    private final boolean isFirstLogin;
+    private final String avatar;
 
     private UserPreference userPreference;
 
@@ -22,14 +22,14 @@ public class User {
         this.email = email;
         isFirstLogin = true;
 
-        if(avatar == null || avatar.trim().equals("")) {
+        if (avatar == null || avatar.trim().equals("")) {
             Gravatar gravatar = new Gravatar(email);
             this.avatar = gravatar.getAvatarUrl();
         } else {
             this.avatar = avatar;
         }
 
-        if(userPreference == null) {
+        if (userPreference == null) {
             this.userPreference = new UserPreference();
         }
     }

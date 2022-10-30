@@ -1,19 +1,14 @@
 package com.example.foodapp.firebase;
 
-import android.accounts.NetworkErrorException;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.foodapp.firebase.entity.User;
 import com.example.foodapp.viewmodel.utils.MD5Util;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.lang.reflect.Executable;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Map;
@@ -51,7 +46,7 @@ public class FirebaseRepository {
         userUpdate.put(emailHash, newUser);
 
         userReference.updateChildren(userUpdate).addOnCompleteListener(task -> {
-            if(completeListener == null) {
+            if (completeListener == null) {
                 return;
             }
             completeListener.run();

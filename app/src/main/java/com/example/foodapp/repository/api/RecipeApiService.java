@@ -22,7 +22,7 @@ public class RecipeApiService {
     }
 
     public static synchronized RecipeApiService getInstance() {
-        if(recipeApiService == null) {
+        if (recipeApiService == null) {
             recipeApiService = new RecipeApiService();
         }
 
