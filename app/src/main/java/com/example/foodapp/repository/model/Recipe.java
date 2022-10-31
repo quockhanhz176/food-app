@@ -14,6 +14,7 @@ public class Recipe {
     private int servings;
     private int healthScore;
     private List<String> cuisines;
+    private String summary;
     private List<AnalyzedInstruction> analyzedInstructions;
 
     public int getId() {
@@ -44,6 +45,10 @@ public class Recipe {
         return healthScore;
     }
 
+    public String getSummary() {
+        return summary;
+    }
+
     public List<String> getCuisines() {
         return cuisines;
     }
@@ -64,6 +69,7 @@ public class Recipe {
                 ", servings=" + servings +
                 ", healthScore=" + healthScore +
                 ", cuisines=" + cuisines +
+                ", summary='" + summary + '\'' +
                 ", analyzedInstructions=" + analyzedInstructions +
                 '}';
     }

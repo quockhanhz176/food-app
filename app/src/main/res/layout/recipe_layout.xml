@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cultured"
+    android:background="@drawable/gradient_background"
     app:layoutDescription="@xml/recipe_layout_scene">
 
     <com.google.android.material.card.MaterialCardView
@@ -25,7 +25,7 @@
             android:layout_height="match_parent"
             android:cropToPadding="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/orange"
+            android:src="@drawable/bread"
             app:shapeAppearanceOverlay="@style/RoundTopStyle" />
     </com.google.android.material.card.MaterialCardView>
 
@@ -197,25 +197,55 @@
         android:layout_height="0dp"
         android:elevation="10dp"
         app:cardElevation="0dp"
-        app:contentPadding="@dimen/recipe_food_cv_title_padding"
         app:layout_constraintEnd_toEndOf="@id/foodImageMcv"
         app:layout_constraintStart_toStartOf="@id/foodImageMcv"
         app:layout_constraintTop_toBottomOf="parent">
 
         <ScrollView
+            android:id="@+id/detailSv"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:padding="@dimen/recipe_food_cv_title_padding">
 
                 <TextView
-                    android:id="@+id/descriptionTv"
+                    android:id="@+id/svTitleTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="yoyoyo its description"
+                    android:gravity="center"
+                    android:text="@string/default_string"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="@dimen/sv_title_text_size"
+                    android:textStyle="bold"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/svSummaryTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/sv_summary_margin_top"
+                    android:text="@string/default_string"
+                    android:textSize="@dimen/sv_summary_text_size"
+                    app:layout_constraintTop_toBottomOf="@id/svTitleTv" />
+
+                <TextView
+                    android:id="@+id/svInstructionTitleTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/sv_summary_margin_top"
+                    android:text="@string/default_string"
+                    android:textSize="@dimen/sv_instruction_title_text_size"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@id/svSummaryTv" />
+
+                <com.example.foodapp.ui.customviews.NonScrollableListView
+                    android:id="@+id/svInstructionLv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/svInstructionTitleTv" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>

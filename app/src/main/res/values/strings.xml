@@ -15,8 +15,21 @@
         <item quantity="other">%d minutes.</item>
     </plurals>
     <plurals name="recipe_layout_subtitle_servings_content">
-        <item quantity="one">%d sering</item>
+        <item quantity="one">%d serving</item>
         <item quantity="other">%d servings</item>
     </plurals>
     <string name="recipe_layout_subtitle_health_score_content">%d &#9733;</string>
+    <string name="recipe_sv_instruction_title">Instruction</string>
+
+    <string name="instruction_step_title">Step %d</string>
+    <string name="instruction_step_step">%s</string>
+
+    <plurals name="instruction_step_ingredients">
+        <item quantity="one">Ingredient: %s</item>
+        <item quantity="other">Ingredients: %s</item>
+    </plurals>
+    <plurals name="instruction_step_equipments">
+        <item quantity="one">Equipment: %s</item>
+        <item quantity="other">Equipments: %s</item>
+    </plurals>
 </resources>

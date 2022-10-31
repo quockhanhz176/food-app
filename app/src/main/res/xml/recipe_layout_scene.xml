@@ -63,6 +63,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/recipe_food_food_image_margin_bottom"
+            android:layout_marginBottom="@dimen/recipe_food_food_image_margin_horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/foodImageMcv"
             app:layout_constraintStart_toStartOf="@id/foodImageMcv"
@@ -70,6 +71,7 @@
     </ConstraintSet>
 
     <Transition
+        android:id="@+id/detailT"
         app:constraintSetEnd="@id/descriptionCs"
         app:constraintSetStart="@+id/introductionCs">
         <OnSwipe app:dragDirection="dragUp" />
