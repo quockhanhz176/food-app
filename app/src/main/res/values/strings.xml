@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">FoodApp</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="already_have_an_account_login">Already have an account? Login</string>
+    <string name="login">Login</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="dont_have_an_account_sign_up">Don’t have an account? Sign Up</string>
     <string name="default_string">Orange</string>
     <string name="recipe_layout_subtitle_ready_time_title">Ready time:\u0020</string>
     <string name="recipe_layout_subtitle_servings_title">Servings:\u0020</string>
