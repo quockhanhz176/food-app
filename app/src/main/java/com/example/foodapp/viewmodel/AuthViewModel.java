@@ -13,13 +13,11 @@ public class AuthViewModel extends AndroidViewModel {
 
     private final AuthRepository authRepository;
     private final MutableLiveData<FirebaseUser> userMutableLiveData;
-    private final MutableLiveData<Boolean> isLogoutLiveData;
 
     public AuthViewModel(@NonNull Application application) {
         super(application);
         authRepository = new AuthRepository(application);
         userMutableLiveData = authRepository.getUserMutableLiveData();
-        isLogoutLiveData = authRepository.getIsLogoutLiveData();
     }
 
     public void register(String email, String password) {
@@ -38,7 +36,4 @@ public class AuthViewModel extends AndroidViewModel {
         return userMutableLiveData;
     }
 
-    public MutableLiveData<Boolean> getIsLogoutLiveData() {
-        return isLogoutLiveData;
-    }
 }

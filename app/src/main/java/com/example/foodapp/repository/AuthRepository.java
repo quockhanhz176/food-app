@@ -12,13 +12,11 @@ public class AuthRepository {
     private final Application application;
     private final FirebaseAuth firebaseAuth;
     private final MutableLiveData<FirebaseUser> userMutableLiveData;
-    private final MutableLiveData<Boolean> isLogoutLiveData;
 
     public AuthRepository(Application application) {
         this.application = application;
         firebaseAuth = FirebaseAuth.getInstance();
         userMutableLiveData = new MutableLiveData<>();
-        isLogoutLiveData = new MutableLiveData<>();
     }
 
     public void register(String email, String password) {
@@ -43,14 +41,11 @@ public class AuthRepository {
 
     public void logout() {
         firebaseAuth.signOut();
-        isLogoutLiveData.postValue(true);
+        userMutableLiveData.postValue(null);
     }
 
     public MutableLiveData<FirebaseUser> getUserMutableLiveData() {
         return userMutableLiveData;
     }
 
-    public MutableLiveData<Boolean> getIsLogoutLiveData() {
-        return isLogoutLiveData;
-    }
 }
