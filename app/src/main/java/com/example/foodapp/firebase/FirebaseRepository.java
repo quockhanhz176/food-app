@@ -32,7 +32,7 @@ public class FirebaseRepository {
         return instance;
     }
 
-    public void saveNewUser(@NonNull String email, @Nullable Runnable completeListener) throws InputMismatchException {
+    public void saveNewUser(@NonNull String email, @Nullable Runnable onComplete) throws InputMismatchException {
         DatabaseReference userReference = database.getReference("users");
 
         User newUser = new User(email, "", null);
@@ -46,14 +46,14 @@ public class FirebaseRepository {
         userUpdate.put(emailHash, newUser);
 
         userReference.updateChildren(userUpdate).addOnCompleteListener(task -> {
-            if (completeListener == null) {
+            if (onComplete == null) {
                 return;
             }
-            completeListener.run();
+            onComplete.run();
         });
     }
 
-    public void fetchUser(String email, Consumer<User> listener) {
+    public void fetchUser(String email, @Nullable Consumer<User> onComplete) {
         DatabaseReference userReference = database.getReference("users");
 
         String emailHash = MD5Util.md5Hex(email);
@@ -63,7 +63,7 @@ public class FirebaseRepository {
 
         userReference.child(emailHash).get().addOnCompleteListener(
                 task -> {
-                    if (!task.isComplete()) {
+                    if (onComplete == null || !task.isComplete()) {
                         return;
                     }
 
@@ -75,7 +75,7 @@ public class FirebaseRepository {
 
 
                     User user = snapshot.getValue(User.class);
-                    listener.accept(user);
+                    onComplete.accept(user);
                 }
         );
     }

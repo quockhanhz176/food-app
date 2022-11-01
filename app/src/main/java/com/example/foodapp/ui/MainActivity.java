@@ -7,12 +7,14 @@ import android.view.WindowManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GestureDetectorCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.foodapp.R;
+import com.example.foodapp.firebase.entity.UserPreference;
+import com.example.foodapp.viewmodel.UserViewModel;
 import com.google.firebase.FirebaseApp;
 import com.example.foodapp.databinding.ActivityMainBinding;
 import com.example.foodapp.ui.home.HomeFragment;
-import com.example.foodapp.ui.login.LoginFragment;
 import com.example.foodapp.ui.sign_up.SignUpFragment;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -29,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         initFirebase();
+
+        testApi();
 
         Window window = getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -47,6 +51,14 @@ public class MainActivity extends AppCompatActivity {
                         .commit();
             }
         }
+    }
+
+    private void testApi() {
+        UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        UserPreference userPreference = new UserPreference();
+
+        userViewModel.setUserPreferences(userPreference);
+        userViewModel.fetchUserPreferences();
     }
 
     private void initFirebase() {

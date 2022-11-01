@@ -46,6 +46,10 @@ public class User {
         return avatar;
     }
 
+    public UserPreference getUserPreference() {
+        return userPreference;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -53,4 +57,6 @@ public class User {
                 ", avatar='" + avatar + '\'' +
                 '}';
     }
+
+
 }

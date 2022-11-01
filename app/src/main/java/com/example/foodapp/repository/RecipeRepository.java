@@ -9,6 +9,7 @@ import com.example.foodapp.repository.enums.Flavor;
 import com.example.foodapp.repository.enums.FoodTag;
 import com.example.foodapp.repository.enums.Intolerance;
 import com.example.foodapp.repository.enums.MealType;
+import com.example.foodapp.repository.model.Recipe;
 import com.example.foodapp.repository.model.RecipeResponse;
 
 import java.util.Collection;
@@ -64,6 +65,10 @@ public class RecipeRepository {
         ).firstOrError().map(
                 response -> new RecipeResponse(response.getResults(), nextPageNumber)
         );
+    }
+
+    public Single<Recipe> getRecipeById(int recipeId) {
+        return recipeRepository.getRecipeById(recipeId).firstOrError();
     }
 
     private String transformTag(FoodTag tag) {
