@@ -1,4 +1,4 @@
-package com.example.foodapp.util;
+package com.example.foodapp.ui.util;
 
 import android.content.Context;
 import android.text.Spannable;
@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentActivity;
 
 public class Utils {
 
-    public SpannableString setColorString(String fullString, String partString, Context context, int color) {
+    static public SpannableString setColorString(String fullString, String partString, Context context, int color) {
         SpannableString spannableString = new SpannableString(fullString);
         int indexStart = fullString.indexOf(partString);
         ForegroundColorSpan foregroundSpan = new ForegroundColorSpan(ContextCompat.getColor(context, color));
@@ -21,7 +21,7 @@ public class Utils {
         return spannableString;
     }
 
-    public void clearAllFragment(FragmentActivity fragmentActivity) {
+    static public void clearAllFragment(FragmentActivity fragmentActivity) {
         try {
             for (int i = 0; i <= fragmentActivity.getSupportFragmentManager().getBackStackEntryCount(); i++) {
                 fragmentActivity.getSupportFragmentManager().popBackStack();
@@ -31,7 +31,7 @@ public class Utils {
         }
     }
 
-    public boolean isValidEmail(CharSequence target) {
+    static public boolean isValidEmail(CharSequence target) {
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 

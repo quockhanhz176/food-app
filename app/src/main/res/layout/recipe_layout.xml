@@ -126,6 +126,7 @@
         android:layout_height="@dimen/recipe_food_cv_button_height"
         android:layout_marginHorizontal="@dimen/recipe_food_cv_button_margin_horizontal"
         android:layout_marginBottom="@dimen/recipe_food_cv_button_margin_bottom"
+        android:clickable="true"
         app:cardCornerRadius="@dimen/recipe_food_button_corner"
         app:cardElevation="0dp"
         app:contentPadding="@dimen/recipe_food_cv_button_padding"
@@ -138,10 +139,14 @@
         app:strokeColor="@color/black">
 
         <ImageView
+            android:id="@+id/likeButtonIv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:checkable="true"
             android:scaleType="fitCenter"
-            android:src="@drawable/heart" />
+            android:src="@drawable/heart"
+            android:tintMode="src_atop"
+            app:tint="@color/like_button_colors" />
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
@@ -150,6 +155,7 @@
         android:layout_height="@dimen/recipe_food_cv_button_height"
         android:layout_marginHorizontal="@dimen/recipe_food_cv_button_margin_horizontal"
         android:layout_marginBottom="@dimen/recipe_food_cv_button_margin_bottom"
+        android:checkable="true"
         app:cardCornerRadius="@dimen/recipe_food_button_corner"
         app:cardElevation="0dp"
         app:contentPadding="@dimen/recipe_food_cv_button_padding"
@@ -161,10 +167,13 @@
         app:strokeColor="@color/black">
 
         <ImageView
+            android:id="@+id/saveButtonIv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitCenter"
-            android:src="@drawable/save" />
+            android:src="@drawable/save"
+            android:tintMode="src_atop"
+            app:tint="@color/like_button_colors" />
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
@@ -173,6 +182,7 @@
         android:layout_height="@dimen/recipe_food_cv_button_height"
         android:layout_marginHorizontal="@dimen/recipe_food_cv_button_margin_horizontal"
         android:layout_marginBottom="@dimen/recipe_food_cv_button_margin_bottom"
+        android:clickable="true"
         app:cardCornerRadius="@dimen/recipe_food_button_corner"
         app:cardElevation="0dp"
         app:contentPadding="@dimen/recipe_food_cv_button_padding"

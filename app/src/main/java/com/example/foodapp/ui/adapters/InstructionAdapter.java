@@ -1,5 +1,6 @@
 package com.example.foodapp.ui.adapters;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,8 @@ public class InstructionAdapter extends BaseAdapter {
 
     public void setData(List<Step> list) {
         itemList = list;
-        notifyDataSetChanged();
+        (new Handler()).postDelayed(this::notifyDataSetChanged, 300);
+//        notifyDataSetChanged();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.example.foodapp.ui.home;
+package com.example.foodapp.ui.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,8 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.foodapp.R;
 import com.example.foodapp.databinding.FragmentHomeBinding;
-import com.example.foodapp.ui.sign_up.SignUpFragment;
-import com.example.foodapp.util.Utils;
+import com.example.foodapp.ui.util.Utils;
 import com.example.foodapp.viewmodel.AuthViewModel;
 
 public class HomeFragment extends Fragment {
@@ -26,7 +25,7 @@ public class HomeFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         viewModel.getUserMutableLiveData().observe(this, user -> {
             if (user == null) {
-                new Utils().clearAllFragment(requireActivity());
+                Utils.clearAllFragment(requireActivity());
                 requireActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, new SignUpFragment())
                         .commit();

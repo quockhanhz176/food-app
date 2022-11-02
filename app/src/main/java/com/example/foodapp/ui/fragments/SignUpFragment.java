@@ -1,4 +1,4 @@
-package com.example.foodapp.ui.sign_up;
+package com.example.foodapp.ui.fragments;
 
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -9,22 +9,38 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.foodapp.R;
 import com.example.foodapp.databinding.FragmentSignUpBinding;
-import com.example.foodapp.ui.home.HomeFragment;
-import com.example.foodapp.ui.login.LoginFragment;
-import com.example.foodapp.util.Utils;
+import com.example.foodapp.ui.util.Utils;
 import com.example.foodapp.viewmodel.AuthViewModel;
-import com.google.firebase.auth.FirebaseUser;
 
 
 public class SignUpFragment extends Fragment {
 
     private FragmentSignUpBinding binding;
     private AuthViewModel viewModel;
+
+    private Runnable showLogin;
+
+    public Runnable getShowLogin() {
+        return showLogin;
+    }
+
+    public void setShowLogin(Runnable showLogin) {
+        this.showLogin = showLogin;
+    }
+
+    public Runnable getShowHome() {
+        return showHome;
+    }
+
+    public void setShowHome(Runnable showHome) {
+        this.showHome = showHome;
+    }
+
+    private Runnable showHome;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,7 +49,8 @@ public class SignUpFragment extends Fragment {
         viewModel.getUserMutableLiveData().observe(this, firebaseUser -> {
             if (firebaseUser != null) {
                 Toast.makeText(requireContext(), "Create account successfully", Toast.LENGTH_SHORT).show();
-                showHomeFragment();
+                if (showHome != null)
+                    showHome.run();
             }
         });
     }
@@ -51,7 +68,8 @@ public class SignUpFragment extends Fragment {
         SpannableString spannableString = new Utils().setColorString(fullString, partString, requireContext(), R.color.orange);
         binding.tvLogin.setText(spannableString);
         binding.tvLogin.setOnClickListener(view -> {
-            showLoginFragment();
+            if (showLogin != null)
+                showLogin.run();
         });
 
         binding.btSignUp.setOnClickListener(view -> {
@@ -83,19 +101,6 @@ public class SignUpFragment extends Fragment {
         }
         return true;
     }
-
-
-    private void showLoginFragment() {
-        requireActivity().getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, new LoginFragment(), SignUpFragment.class.getCanonicalName()).addToBackStack(SignUpFragment.class.getCanonicalName()).commit();
-    }
-
-    private void showHomeFragment() {
-        new Utils().clearAllFragment(requireActivity());
-        requireActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new HomeFragment(), HomeFragment.class.getCanonicalName()).commit();
-    }
-
 
     @Override
     public void onDestroyView() {

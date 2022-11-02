@@ -1,5 +1,6 @@
 package com.example.foodapp.ui.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.foodapp.R;
 import com.example.foodapp.repository.model.Recipe;
 import com.example.foodapp.ui.customviews.NonScrollableListView;
+import com.google.android.material.card.MaterialCardView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -55,6 +57,10 @@ public class RecipeAdapter extends PagingDataAdapter<Recipe, RecipeAdapter.Recip
         private TextView readyTimeContentTv;
         private TextView servingsContent;
         private TextView healthContentScore;
+        private MaterialCardView likeButtonMcv;
+        private MaterialCardView saveButtonMcv;
+        private ImageView likeButtonIv;
+        private ImageView saveButtonIv;
 
         private ScrollView detailSv;
         private TextView svTitle;
@@ -105,6 +111,8 @@ public class RecipeAdapter extends PagingDataAdapter<Recipe, RecipeAdapter.Recip
                         itemView.getResources().getString(R.string.recipe_sv_instruction_title)
                 );
             }
+            svInstructionLv.requestLayout();
+            svInstructionLv.invalidate();
         }
 
         private void bindView() {
@@ -113,6 +121,10 @@ public class RecipeAdapter extends PagingDataAdapter<Recipe, RecipeAdapter.Recip
             readyTimeContentTv = itemView.findViewById(R.id.readyTimeContentTv);
             servingsContent = itemView.findViewById(R.id.servingContentTv);
             healthContentScore = itemView.findViewById(R.id.healthScoreContentTv);
+            likeButtonMcv = itemView.findViewById(R.id.likeButtonMcv);
+            saveButtonMcv = itemView.findViewById(R.id.saveButtonMcv);
+            likeButtonIv = itemView.findViewById(R.id.likeButtonIv);
+            saveButtonIv = itemView.findViewById(R.id.saveButtonIv);
 
             detailSv = itemView.findViewById(R.id.detailSv);
             svTitle = itemView.findViewById(R.id.svTitleTv);
@@ -121,11 +133,18 @@ public class RecipeAdapter extends PagingDataAdapter<Recipe, RecipeAdapter.Recip
             svInstructionLv = itemView.findViewById(R.id.svInstructionLv);
             adapter = new InstructionAdapter();
             svInstructionLv.setAdapter(adapter);
+
+            likeButtonMcv.setOnClickListener(view -> {
+                likeButtonIv.setSelected(!likeButtonIv.isSelected());
+            });
+            saveButtonMcv.setOnClickListener(view -> {
+                saveButtonIv.setSelected(!saveButtonIv.isSelected());
+            });
         }
 
-        public void resetLayout()
-        {
+        public void resetLayout() {
             ((MotionLayout) itemView).jumpToState(R.id.introductionCs);
+            detailSv.scrollTo(0, 0);
 
         }
 

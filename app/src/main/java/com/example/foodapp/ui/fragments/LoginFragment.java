@@ -1,4 +1,4 @@
-package com.example.foodapp.ui.login;
+package com.example.foodapp.ui.fragments;
 
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -13,14 +13,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.foodapp.R;
 import com.example.foodapp.databinding.FragmentLoginBinding;
-import com.example.foodapp.ui.home.HomeFragment;
+import com.example.foodapp.ui.util.Utils;
 import com.example.foodapp.viewmodel.AuthViewModel;
-import com.example.foodapp.util.Utils;
 
 public class LoginFragment extends Fragment {
 
     private FragmentLoginBinding binding;
     private AuthViewModel viewModel;
+    private Runnable onLoginSuccess;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,8 +29,7 @@ public class LoginFragment extends Fragment {
         viewModel.getUserMutableLiveData().observe(this, firebaseUser -> {
             if (firebaseUser != null) {
                 Toast.makeText(requireContext(), "Login Successfully", Toast.LENGTH_SHORT).show();
-                new Utils().clearAllFragment(requireActivity());
-                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment(), HomeFragment.class.getCanonicalName()).commit();
+                if (onLoginSuccess != null) onLoginSuccess.run();
             }
         });
     }
@@ -80,5 +79,13 @@ public class LoginFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    public Runnable getOnLoginSuccess() {
+        return onLoginSuccess;
+    }
+
+    public void setOnLoginSuccess(Runnable onLoginSuccess) {
+        this.onLoginSuccess = onLoginSuccess;
     }
 }

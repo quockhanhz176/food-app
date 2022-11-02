@@ -25,6 +25,7 @@ import java.util.Collection;
 
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import kotlinx.coroutines.CoroutineScope;
 
 public class RecipeViewModel extends AndroidViewModel {
@@ -55,13 +56,13 @@ public class RecipeViewModel extends AndroidViewModel {
         compositeDisposable.clear();
         CoroutineScope viewModelScope = ViewModelKt.getViewModelScope(this);
         Pager<Integer, Recipe> pager = new Pager<>(
-                new PagingConfig(5),
+                new PagingConfig(10),
                 () -> new RecipePagingSource(recipeRepository, query, cuisines, flavors, intolerances, mealTypes)
         );
         Flowable<PagingData<Recipe>> recipeFlowable = PagingRx.getFlowable(pager);
-        compositeDisposable.add(recipeFlowable.subscribe(
-                recipeMutableLiveData::postValue
-        ));
+        compositeDisposable.add(recipeFlowable
+                .subscribeOn(Schedulers.io())
+                .subscribe(recipeMutableLiveData::postValue));
         PagingRx.cachedIn(recipeFlowable, viewModelScope);
     }
 }

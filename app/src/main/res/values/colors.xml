@@ -9,7 +9,8 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="transparent">#00000000</color>
-    <color name="spanishGray">#9796A1</color>
+    <color name="spanish_gray">#9796A1</color>
     <color name="orange">#FE724C</color>
     <color name="black_overlay">#DD000000</color>
+    <color name="sonic_silver">#737373</color>
 </resources>
