@@ -10,107 +10,105 @@ import androidx.annotation.Nullable;
 import androidx.annotation.Px;
 import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.paging.PagingData;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.foodapp.R;
+import com.example.foodapp.firebase.entity.RecipeType;
+import com.example.foodapp.repository.model.Recipe;
 import com.example.foodapp.ui.adapters.RecipeAdapter;
-import com.example.foodapp.ui.customviews.CustomMotionLayout;
 import com.example.foodapp.viewmodel.RecipeViewModel;
+import com.example.foodapp.viewmodel.UserViewModel;
 
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class RecipeFragment extends Fragment {
 
     private ViewPager2 surfVp2;
-    private CustomMotionLayout layout;
     private RecipeViewModel recipeViewModel;
-    private final CompositeDisposable disposable = new CompositeDisposable();
+    private UserViewModel userViewModel;
     private int surfVp2lastPosition = -1;
-    private SearchFragment searchFragment;
+    private Observer<PagingData<Recipe>> recipeObserver;
+    private RecipeAdapter adapter;
+    private MotionLayout.TransitionListener recipeDetailTransitionListener;
+
+    public void setRecipeDetailTransitionListener(MotionLayout.TransitionListener recipeDetailTransitionListener) {
+        this.recipeDetailTransitionListener = recipeDetailTransitionListener;
+    }
+
+    public void setRecipeList(List<Recipe> list) {
+        if (recipeObserver != null) {
+            recipeViewModel.getRecipeLiveData().removeObserver(recipeObserver);
+        }
+        if (adapter != null) {
+            adapter.submitData(getLifecycle(), PagingData.from(list));
+        }
+    }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        layout = (CustomMotionLayout) inflater.inflate(R.layout.fragment_recipe, container, false);
-        recipeViewModel = new ViewModelProvider(requireActivity()).get(RecipeViewModel.class);
-        bindView();
-        setupLayout();
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        surfVp2 = (ViewPager2) inflater.inflate(R.layout.fragment_recipe, container, false);
+        setupViewModels();
         setupViewPager();
 
-        return layout;
+        return surfVp2;
     }
 
-    private void setupLayout() {
-        layout.addTransitionListener(new MotionLayout.TransitionListener() {
-            private final RecyclerView rv = (RecyclerView) surfVp2.getChildAt(0);
-
-            @Override
-            public void onTransitionStarted(MotionLayout motionLayout, int startId, int endId) {
-                setMotionEnable(false);
-            }
-
-            @Override
-            public void onTransitionChange(MotionLayout motionLayout, int startId, int endId, float progress) {
-
-            }
-
-            @Override
-            public void onTransitionCompleted(MotionLayout motionLayout, int currentId) {
-                if (currentId != R.id.searchCs) {
-                    setMotionEnable(true);
-                }
-            }
-
-            @Override
-            public void onTransitionTrigger(MotionLayout motionLayout, int triggerId, boolean positive, float progress) {
-
-            }
-
-            private void setMotionEnable(boolean value) {
-                RecipeAdapter.RecipeViewHolder viewHolder = (RecipeAdapter.RecipeViewHolder) rv.findViewHolderForAdapterPosition(surfVp2lastPosition);
-                if (viewHolder != null) {
-                    viewHolder.setUserEnabled(value);
-                    surfVp2.setUserInputEnabled(value);
-                }
-            }
-        });
-        searchFragment.setOnSearchListener(query -> layout.transitionToState(R.id.notSearchCs));
+    private void setupViewModels() {
+        recipeViewModel = new ViewModelProvider(requireActivity()).get(RecipeViewModel.class);
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
     }
 
     private void setupViewPager() {
-        RecipeAdapter adapter = new RecipeAdapter(new MotionLayout.TransitionListener() {
+        adapter = new RecipeAdapter(new MotionLayout.TransitionListener() {
             @Override
             public void onTransitionStarted(MotionLayout motionLayout, int startId, int endId) {
                 surfVp2.setUserInputEnabled(false);
-                setMotionEnable(false);
+                if (recipeDetailTransitionListener != null)
+                    recipeDetailTransitionListener.onTransitionStarted(motionLayout, startId, endId);
             }
 
             @Override
             public void onTransitionChange(MotionLayout motionLayout, int startId, int endId, float progress) {
-
+                if (recipeDetailTransitionListener != null)
+                    recipeDetailTransitionListener.onTransitionChange(motionLayout, startId, endId, progress);
             }
 
             @Override
             public void onTransitionCompleted(MotionLayout motionLayout, int currentId) {
                 surfVp2.setUserInputEnabled(true);
-                if (currentId == R.id.introductionCs)
-                    setMotionEnable(true);
+                if (recipeDetailTransitionListener != null)
+                    recipeDetailTransitionListener.onTransitionCompleted(motionLayout, currentId);
             }
 
             @Override
             public void onTransitionTrigger(MotionLayout motionLayout, int triggerId, boolean positive, float progress) {
-
+                if (recipeDetailTransitionListener != null)
+                    recipeDetailTransitionListener.onTransitionTrigger(motionLayout, triggerId, positive, progress);
             }
-
-            private void setMotionEnable(boolean value) {
-                layout.enableTransition(R.id.searchT, value);
-                layout.setAbsorptionMode(value ?
-                        CustomMotionLayout.MotionAbsorptionMode.DRAG_DOWN :
-                        CustomMotionLayout.MotionAbsorptionMode.NONE
-                );
+        });
+        userViewModel.getLikedRecipeListLiveData().observe(getViewLifecycleOwner(), adapter::setLikedRecipeIdList);
+        userViewModel.getSavedRecipeListLiveData().observe(
+                getViewLifecycleOwner(),
+                list -> adapter.setSavedRecipeIdList(list.stream().map(Recipe::getId).collect(Collectors.toList()))
+        );
+        adapter.setOnLikeButtonCheckedChange((recipe, newCheckState) -> {
+            if (newCheckState) {
+                userViewModel.addNewRecipe(RecipeType.LIKED, recipe);
+            } else {
+                userViewModel.removeRecipe(RecipeType.LIKED, recipe);
+            }
+        });
+        adapter.setOnSaveButtonCheckedChange((recipe, newCheckState) -> {
+            if (newCheckState) {
+                userViewModel.addNewRecipe(RecipeType.SAVED, recipe);
+            } else {
+                userViewModel.removeRecipe(RecipeType.SAVED, recipe);
             }
         });
 
@@ -134,22 +132,9 @@ public class RecipeFragment extends Fragment {
             }
         });
 
-//        recipeViewModel.setSearchParams("fish", null, null, Arrays.asList(Intolerance.Egg), Arrays.asList(MealType.MainCourse));
-//        recipeViewModel.setSearchParams("", Collections.singletonList(Cuisine.Mexican), null, null, null);
+        recipeObserver = (Observer<PagingData<Recipe>>) recipePagingData -> adapter.submitData(getLifecycle(), recipePagingData);
         recipeViewModel.getRecipeLiveData().observe(
-                getViewLifecycleOwner(),
-                recipePagingData -> adapter.submitData(getLifecycle(), recipePagingData)
+                getViewLifecycleOwner(), recipeObserver
         );
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        disposable.clear();
-    }
-
-    private void bindView() {
-        surfVp2 = layout.findViewById(R.id.surfVp2);
-        searchFragment = (SearchFragment) getChildFragmentManager().findFragmentById(R.id.searchFcv);
     }
 }

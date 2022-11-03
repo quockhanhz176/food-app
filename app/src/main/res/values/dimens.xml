@@ -19,7 +19,7 @@
     <dimen name="recipe_food_title_text_size">18sp</dimen>
     <dimen name="recipe_food_subtitle_text_size">12sp</dimen>
 
-    <dimen name="recipe_scene_description_food_image_height">60dp</dimen>
+    <dimen name="recipe_scene_description_food_image_height">160dp</dimen>
     
     <dimen name="instruction_step_padding">10dp</dimen>
 
@@ -29,4 +29,14 @@
     <dimen name="sv_summary_text_size">14sp</dimen>
     <dimen name="sv_step_title_text_size">16sp</dimen>
     <dimen name="sv_step_text_size">14sp</dimen>
+
+    <dimen name="search_search_margin_end">10dp</dimen>
+    <dimen name="search_padding">10dp</dimen>
+
+    <dimen name="saved_recipe_item_margin">5dp</dimen>
+    <dimen name="saved_recipe_list_padding">10dp</dimen>
+    <dimen name="saved_recipe_item_title_padding">10dp</dimen>
+    <dimen name="saved_recipe_corner_radius">10dp</dimen>
+    <dimen name="saved_recipe_title_padding">15dp</dimen>
+    <dimen name="saved_recipe_title_text_size">18sp</dimen>
 </resources>

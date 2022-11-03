@@ -32,6 +32,14 @@
         <item quantity="one">Equipment: %s</item>
         <item quantity="other">Equipments: %s</item>
     </plurals>
+
+    <string name="home_item_title">Home</string>
+    <string name="saved_recipes_item_title">Saved recipes</string>
+    <string name="user_settings_item_title">User settings</string>
+    <string name="log_out_item_title">Log out</string>
+
+    <string name="saved_recipes_title">Your saved recipes</string>
+
     <string name="suggest_cuisine">What are your favorite cuisines?</string>
     <string name="suggest_flavor">What are your favorite flavors?</string>
     <string name="suggest_intolerances">What are your food intolerances?</string>

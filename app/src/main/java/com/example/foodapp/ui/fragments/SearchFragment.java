@@ -2,11 +2,16 @@ package com.example.foodapp.ui.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.view.MenuCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -18,8 +23,14 @@ import java.util.function.Consumer;
 public class SearchFragment extends Fragment {
 
     private SearchView searchSv;
+    private ImageView userIconIv;
     private ConstraintLayout layout;
     private RecipeViewModel recipeViewModel;
+    public OnUserMenuItemClickListener onUserMenuItemCLickListener = new OnUserMenuItemClickListener();
+
+    public void setOnUserMenuItemCLickListener(@NonNull OnUserMenuItemClickListener onUserMenuItemCLickListener) {
+        this.onUserMenuItemCLickListener = onUserMenuItemCLickListener;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,6 +49,7 @@ public class SearchFragment extends Fragment {
 
     private void bindView() {
         searchSv = layout.findViewById(R.id.searchSv);
+        userIconIv = layout.findViewById(R.id.userIconIv);
     }
 
     private void bindAction() {
@@ -54,5 +66,44 @@ public class SearchFragment extends Fragment {
                 return false;
             }
         });
+        userIconIv.setOnClickListener(view -> {
+                    PopupMenu popup = new PopupMenu(getContext(), view);
+                    popup.getMenuInflater().inflate(R.menu.user_menu, popup.getMenu());
+                    MenuCompat.setGroupDividerEnabled(popup.getMenu(), true);
+                    popup.show();
+                    popup.setOnMenuItemClickListener(menuItem -> {
+                        switch (menuItem.getItemId()) {
+                            case R.id.homeI:
+                                onUserMenuItemCLickListener.onHomeClick();
+                                return true;
+                            case R.id.savedRecipesI:
+                                onUserMenuItemCLickListener.onSavedRecipesClick();
+                                return true;
+                            case R.id.userSettingsI:
+                                onUserMenuItemCLickListener.onUserSettingsClick();
+                                return true;
+                            case R.id.logOutI:
+                                onUserMenuItemCLickListener.onLogOutClick();
+                                return true;
+                            default:
+                                return false;
+                        }
+                    });
+                }
+        );
+    }
+
+    public static class OnUserMenuItemClickListener {
+        public void onHomeClick() {
+        }
+
+        public void onSavedRecipesClick() {
+        }
+
+        public void onUserSettingsClick() {
+        }
+
+        public void onLogOutClick() {
+        }
     }
 }

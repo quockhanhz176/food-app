@@ -5,50 +5,82 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.Observer;
+import androidx.paging.PagingData;
 
 import com.example.foodapp.R;
-import com.example.foodapp.databinding.FragmentHomeBinding;
-import com.example.foodapp.ui.util.Utils;
-import com.example.foodapp.viewmodel.AuthViewModel;
+import com.example.foodapp.repository.model.Recipe;
+import com.example.foodapp.ui.customviews.CustomMotionLayout;
 
 public class HomeFragment extends Fragment {
 
-    private FragmentHomeBinding binding;
-    private AuthViewModel viewModel;
+    private CustomMotionLayout layout;
+    private SearchFragment searchFragment;
+    private RecipeFragment recipeFragment;
+    private SearchFragment.OnUserMenuItemClickListener onUserMenuItemClickListener;
+    private Observer<PagingData<Recipe>> recipeObserver;
 
+    public void setOnUserMenuItemClickListener(@NonNull SearchFragment.OnUserMenuItemClickListener onUserMenuItemClickListener) {
+        this.onUserMenuItemClickListener = onUserMenuItemClickListener;
+        if (searchFragment != null) {
+            searchFragment.setOnUserMenuItemCLickListener(onUserMenuItemClickListener);
+        }
+    }
+
+    @Nullable
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-        viewModel.getUserMutableLiveData().observe(this, user -> {
-            if (user == null) {
-                Utils.clearAllFragment(requireActivity());
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new SignUpFragment())
-                        .commit();
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        layout = (CustomMotionLayout) inflater.inflate(R.layout.fragment_home, container, false);
+        bindView();
+        setupViewPager();
+
+        return layout;
+    }
+
+    private void setupViewPager() {
+        recipeFragment.setRecipeDetailTransitionListener(new MotionLayout.TransitionListener() {
+            @Override
+            public void onTransitionStarted(MotionLayout motionLayout, int startId, int endId) {
+                setMotionEnable(false);
+            }
+
+            @Override
+            public void onTransitionChange(MotionLayout motionLayout, int startId, int endId, float progress) {
+
+            }
+
+            @Override
+            public void onTransitionCompleted(MotionLayout motionLayout, int currentId) {
+                if (currentId == R.id.introductionCs)
+                    setMotionEnable(true);
+            }
+
+            @Override
+            public void onTransitionTrigger(MotionLayout motionLayout, int triggerId, boolean positive, float progress) {
+
+            }
+
+            private void setMotionEnable(boolean value) {
+                layout.setAbsorptionMode(value ?
+                        CustomMotionLayout.MotionAbsorptionMode.DRAG_DOWN :
+                        CustomMotionLayout.MotionAbsorptionMode.NONE
+                );
             }
         });
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
-        setupView();
-        return binding.getRoot();
-    }
-
-    private void setupView() {
-        binding.btLogout.setOnClickListener(view -> {
-            viewModel.logout();
-        });
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    private void bindView() {
+        recipeFragment = (RecipeFragment) getChildFragmentManager().findFragmentById(R.id.recipeFcv);
+        searchFragment = (SearchFragment) getChildFragmentManager().findFragmentById(R.id.searchFcv);
+        if (searchFragment != null) {
+            searchFragment.setOnSearchListener(query -> layout.transitionToState(R.id.notSearchCs));
+            if (onUserMenuItemClickListener != null) {
+                searchFragment.setOnUserMenuItemCLickListener(onUserMenuItemClickListener);
+            }
+        }
     }
 }

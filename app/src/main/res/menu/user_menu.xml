@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item
+            android:id="@+id/homeI"
+            android:title="@string/home_item_title" />
+        <item
+            android:id="@+id/savedRecipesI"
+            android:title="@string/saved_recipes_item_title" />
+    </group>
+    <group>
+        <item
+            android:id="@+id/userSettingsI"
+            android:title="@string/user_settings_item_title" />
+        <item
+            android:id="@+id/logOutI"
+            android:title="@string/log_out_item_title" />
+    </group>
+</menu>

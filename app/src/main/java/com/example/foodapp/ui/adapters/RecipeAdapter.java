@@ -1,8 +1,6 @@
 package com.example.foodapp.ui.adapters;
 
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -13,19 +11,53 @@ import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.core.text.HtmlCompat;
 import androidx.paging.PagingDataAdapter;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodapp.R;
+import com.example.foodapp.databinding.RecipeLayoutBinding;
 import com.example.foodapp.repository.model.Recipe;
-import com.example.foodapp.ui.customviews.NonScrollableListView;
+import com.example.foodapp.ui.customviews.NonScrollableRecyclerView;
 import com.google.android.material.card.MaterialCardView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RecipeAdapter extends PagingDataAdapter<Recipe, RecipeAdapter.RecipeViewHolder> {
 
     private final MotionLayout.TransitionListener transitionListener;
+    private IOnRecipeButtonCheckedChangeListener onLikeButtonCheckedChange;
+    private IOnRecipeButtonCheckedChangeListener onSaveButtonCheckedChange;
+    private List<Integer> savedRecipeIdList = new ArrayList<>();
+    private List<Integer> likedRecipeIdList = new ArrayList<>();
+    private final List<RecipeViewHolder> viewHolderList = new ArrayList<>();
+
+    public void setOnLikeButtonCheckedChange(IOnRecipeButtonCheckedChangeListener onLikeButtonCheckedChange) {
+        this.onLikeButtonCheckedChange = onLikeButtonCheckedChange;
+    }
+
+    public void setOnSaveButtonCheckedChange(IOnRecipeButtonCheckedChangeListener onSaveButtonCheckedChange) {
+        this.onSaveButtonCheckedChange = onSaveButtonCheckedChange;
+    }
+
+    public void setSavedRecipeIdList(List<Integer> savedRecipeIdList) {
+        this.savedRecipeIdList = savedRecipeIdList;
+        for (RecipeViewHolder holder : viewHolderList) {
+            if (savedRecipeIdList.contains(holder.recipe.getId())) {
+                holder.setSaved(true);
+            }
+        }
+    }
+
+    public void setLikedRecipeIdList(List<Integer> likedRecipeIdList) {
+        this.likedRecipeIdList = likedRecipeIdList;
+        for (RecipeViewHolder holder : viewHolderList) {
+            if (likedRecipeIdList.contains(holder.recipe.getId())) {
+                holder.setLiked(true);
+            }
+        }
+    }
 
     public RecipeAdapter(MotionLayout.TransitionListener transitionListener) {
         super(new RecipeComparator());
@@ -35,12 +67,13 @@ public class RecipeAdapter extends PagingDataAdapter<Recipe, RecipeAdapter.Recip
     @NonNull
     @Override
     public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        MotionLayout view =
-                (MotionLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_layout, parent, false);
+        RecipeLayoutBinding binding = RecipeLayoutBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         if (transitionListener != null) {
-            view.setTransitionListener(transitionListener);
+            binding.getRoot().setTransitionListener(transitionListener);
         }
-        return new RecipeViewHolder(view);
+        RecipeViewHolder holder = new RecipeViewHolder(binding);
+        viewHolderList.add(holder);
+        return holder;
     }
 
     @Override
@@ -51,12 +84,15 @@ public class RecipeAdapter extends PagingDataAdapter<Recipe, RecipeAdapter.Recip
         }
     }
 
-    public static class RecipeViewHolder extends RecyclerView.ViewHolder {
-        private ImageView foodIv;
+    public class RecipeViewHolder extends RecyclerView.ViewHolder {
+        private Recipe recipe;
+        private final RecipeLayoutBinding binding;
+
+        private ImageView foodSiv;
         private TextView foodTitleTv;
         private TextView readyTimeContentTv;
-        private TextView servingsContent;
-        private TextView healthContentScore;
+        private TextView servingsContentTv;
+        private TextView healthScoreContentTv;
         private MaterialCardView likeButtonMcv;
         private MaterialCardView saveButtonMcv;
         private ImageView likeButtonIv;
@@ -66,17 +102,27 @@ public class RecipeAdapter extends PagingDataAdapter<Recipe, RecipeAdapter.Recip
         private TextView svTitle;
         private TextView svSummaryTv;
         private TextView svInstructionTitleTv;
-        private NonScrollableListView svInstructionLv;
+        private NonScrollableRecyclerView svInstructionRv;
         private InstructionAdapter adapter;
 
-        public RecipeViewHolder(@NonNull View itemView) {
-            super(itemView);
+        public RecipeViewHolder(@NonNull RecipeLayoutBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
             bindView();
         }
 
+        public void setLiked(boolean value) {
+            likeButtonIv.setSelected(value);
+        }
+
+        public void setSaved(boolean value) {
+            saveButtonIv.setSelected(value);
+        }
+
         public void setRecipe(Recipe recipe) {
+            this.recipe = recipe;
             foodTitleTv.setText(recipe.getTitle());
-            Picasso.get().load(recipe.getImage()).into(foodIv);
+            Picasso.get().load(recipe.getImage()).into(foodSiv);
             readyTimeContentTv.setText(
                     itemView.getResources().getQuantityString(
                             R.plurals.recipe_layout_subtitle_ready_time_content,
@@ -84,19 +130,25 @@ public class RecipeAdapter extends PagingDataAdapter<Recipe, RecipeAdapter.Recip
                             recipe.getReadyInMinutes()
                     )
             );
-            servingsContent.setText(
+            servingsContentTv.setText(
                     itemView.getResources().getQuantityString(
                             R.plurals.recipe_layout_subtitle_servings_content,
                             recipe.getServings(),
                             recipe.getServings()
                     )
             );
-            healthContentScore.setText(
+            healthScoreContentTv.setText(
                     itemView.getResources().getString(
                             R.string.recipe_layout_subtitle_health_score_content,
                             recipe.getHealthScore()
                     )
             );
+            if (likedRecipeIdList != null) {
+                likeButtonIv.setSelected(likedRecipeIdList.contains(recipe.getId()));
+            }
+            if (savedRecipeIdList != null) {
+                saveButtonIv.setSelected(savedRecipeIdList.contains(recipe.getId()));
+            }
 
             svTitle.setText(recipe.getTitle());
             svSummaryTv.setText(
@@ -111,34 +163,49 @@ public class RecipeAdapter extends PagingDataAdapter<Recipe, RecipeAdapter.Recip
                         itemView.getResources().getString(R.string.recipe_sv_instruction_title)
                 );
             }
-            svInstructionLv.requestLayout();
-            svInstructionLv.invalidate();
+            svInstructionRv.requestLayout();
+            svInstructionRv.postInvalidate();
         }
 
         private void bindView() {
-            foodIv = itemView.findViewById(R.id.foodSiv);
-            foodTitleTv = itemView.findViewById(R.id.foodTitleTv);
-            readyTimeContentTv = itemView.findViewById(R.id.readyTimeContentTv);
-            servingsContent = itemView.findViewById(R.id.servingContentTv);
-            healthContentScore = itemView.findViewById(R.id.healthScoreContentTv);
-            likeButtonMcv = itemView.findViewById(R.id.likeButtonMcv);
-            saveButtonMcv = itemView.findViewById(R.id.saveButtonMcv);
-            likeButtonIv = itemView.findViewById(R.id.likeButtonIv);
-            saveButtonIv = itemView.findViewById(R.id.saveButtonIv);
+            foodSiv = binding.foodSiv;
+            foodTitleTv = binding.foodTitleTv;
+            readyTimeContentTv = binding.readyTimeContentTv;
+            servingsContentTv = binding.servingContentTv;
+            healthScoreContentTv = binding.healthScoreContentTv;
+            likeButtonMcv = binding.likeButtonMcv;
+            saveButtonMcv = binding.saveButtonMcv;
+            likeButtonIv = binding.likeButtonIv;
+            saveButtonIv = binding.saveButtonIv;
 
-            detailSv = itemView.findViewById(R.id.detailSv);
-            svTitle = itemView.findViewById(R.id.svTitleTv);
-            svSummaryTv = itemView.findViewById(R.id.svSummaryTv);
-            svInstructionTitleTv = itemView.findViewById(R.id.svInstructionTitleTv);
-            svInstructionLv = itemView.findViewById(R.id.svInstructionLv);
+            detailSv = binding.detailSv;
+            svTitle = binding.svTitleTv;
+            svSummaryTv = binding.svSummaryTv;
+            svInstructionTitleTv = binding.svInstructionTitleTv;
+            svInstructionRv = binding.svInstructionRv;
+
             adapter = new InstructionAdapter();
-            svInstructionLv.setAdapter(adapter);
+            svInstructionRv.setLayoutManager(new LinearLayoutManager(itemView.getContext()) {
+                @Override
+                public boolean canScrollVertically() {
+                    return false;
+                }
+            });
+            svInstructionRv.setAdapter(adapter);
 
             likeButtonMcv.setOnClickListener(view -> {
-                likeButtonIv.setSelected(!likeButtonIv.isSelected());
+                boolean newState = !likeButtonIv.isSelected();
+                likeButtonIv.setSelected(newState);
+                if (onLikeButtonCheckedChange != null) {
+                    onLikeButtonCheckedChange.onCheckedChange(recipe, newState);
+                }
             });
             saveButtonMcv.setOnClickListener(view -> {
-                saveButtonIv.setSelected(!saveButtonIv.isSelected());
+                boolean newState = !saveButtonIv.isSelected();
+                saveButtonIv.setSelected(newState);
+                if (onSaveButtonCheckedChange != null) {
+                    onSaveButtonCheckedChange.onCheckedChange(recipe, newState);
+                }
             });
         }
 
@@ -146,11 +213,6 @@ public class RecipeAdapter extends PagingDataAdapter<Recipe, RecipeAdapter.Recip
             ((MotionLayout) itemView).jumpToState(R.id.introductionCs);
             detailSv.scrollTo(0, 0);
 
-        }
-
-        public void setUserEnabled(boolean value) {
-            ((MotionLayout) itemView).enableTransition(R.id.detailT, value);
-//            detailSv.setOnTouchListener((view, motionEvent) -> false);
         }
     }
 
@@ -165,5 +227,9 @@ public class RecipeAdapter extends PagingDataAdapter<Recipe, RecipeAdapter.Recip
         public boolean areContentsTheSame(@NonNull Recipe oldItem, @NonNull Recipe newItem) {
             return oldItem.equals(newItem);
         }
+    }
+
+    public interface IOnRecipeButtonCheckedChangeListener {
+        void onCheckedChange(Recipe recipe, boolean newCheckState);
     }
 }

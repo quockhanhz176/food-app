@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.motion.widget.MotionLayout;
 
+import com.example.foodapp.R;
+
 public class CustomMotionLayout extends MotionLayout {
     public CustomMotionLayout(@NonNull Context context) {
         super(context);
@@ -22,6 +24,33 @@ public class CustomMotionLayout extends MotionLayout {
 
     public CustomMotionLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    {
+        addTransitionListener(new MotionLayout.TransitionListener() {
+            @Override
+            public void onTransitionStarted(MotionLayout motionLayout, int startId, int endId) {
+
+            }
+
+            @Override
+            public void onTransitionChange(MotionLayout motionLayout, int startId, int endId, float progress) {
+
+            }
+
+            @Override
+            public void onTransitionCompleted(MotionLayout motionLayout, int currentId) {
+                setAbsorptionMode(currentId != R.id.searchCs ?
+                        CustomMotionLayout.MotionAbsorptionMode.DRAG_DOWN :
+                        CustomMotionLayout.MotionAbsorptionMode.DRAG_UP
+                );
+            }
+
+            @Override
+            public void onTransitionTrigger(MotionLayout motionLayout, int triggerId, boolean positive, float progress) {
+
+            }
+        });
     }
 
     private boolean mIsScrolling = false;
@@ -60,7 +89,10 @@ public class CustomMotionLayout extends MotionLayout {
                 final float yDiff = calculateDistanceY(event);
                 final float xDiff = calculateDistanceX(event);
 
-                if (yDiff > abs(xDiff)) {
+                if (yDiff > abs(xDiff) && absorptionMode == MotionAbsorptionMode.DRAG_DOWN) {
+                    mIsScrolling = true;
+                    return true;
+                } else if (yDiff < -abs(xDiff) && absorptionMode == MotionAbsorptionMode.DRAG_UP) {
                     mIsScrolling = true;
                     return true;
                 }
@@ -84,6 +116,7 @@ public class CustomMotionLayout extends MotionLayout {
     public enum MotionAbsorptionMode {
         ALL,
         DRAG_DOWN,
+        DRAG_UP,
         NONE
     }
 }
