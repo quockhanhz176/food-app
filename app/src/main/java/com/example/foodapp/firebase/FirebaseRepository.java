@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 
 import com.example.foodapp.firebase.entity.User;
 import com.example.foodapp.viewmodel.utils.MD5Util;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -32,7 +33,7 @@ public class FirebaseRepository {
         return instance;
     }
 
-    public void saveNewUser(@NonNull String email, @Nullable Runnable onComplete) throws InputMismatchException {
+    public void saveNewUser(@NonNull String email, @Nullable Consumer<Task> onComplete) throws InputMismatchException {
         DatabaseReference userReference = database.getReference("users");
 
         User newUser = new User(email, "", null);
@@ -49,7 +50,7 @@ public class FirebaseRepository {
             if (onComplete == null) {
                 return;
             }
-            onComplete.run();
+            onComplete.accept(task);
         });
     }
 

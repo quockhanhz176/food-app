@@ -27,11 +27,18 @@ public class AuthRepository {
     }
 
     public void register(String email, String password) {
-        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                firebaseRepository.saveNewUser(email, () -> userMutableLiveData.postValue(firebaseAuth.getCurrentUser()));
+        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(registerResult -> {
+            if (registerResult.isSuccessful()) {
+                firebaseRepository.saveNewUser(email,
+                        saveUserResult -> {
+                            if (saveUserResult.isSuccessful()) {
+                                userMutableLiveData.postValue(firebaseAuth.getCurrentUser());
+                            }
+                        });
             } else {
-                Toast.makeText(application, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(application,
+                        "Registration failed: " + registerResult.getException().getMessage(),
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -41,7 +48,8 @@ public class AuthRepository {
             if (task.isSuccessful()) {
                 userMutableLiveData.postValue(firebaseAuth.getCurrentUser());
             } else {
-                Toast.makeText(application, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(application, "Login failed: " + task.getException().getMessage(),
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
