@@ -11,18 +11,14 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class AuthRepository {
     private final Application application;
-
     private final FirebaseAuth firebaseAuth;
     private final FirebaseRepository firebaseRepository;
-
     private final MutableLiveData<FirebaseUser> userMutableLiveData;
 
     public AuthRepository(Application application) {
         this.application = application;
-
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseRepository = FirebaseRepository.getRealtimeDatabaseInstance();
-
         userMutableLiveData = new MutableLiveData<>();
     }
 

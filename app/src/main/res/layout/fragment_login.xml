@@ -5,33 +5,9 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_food_app">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cvBack"
-        android:layout_width="@dimen/_28sdp"
-        android:layout_height="@dimen/_28sdp"
-        android:layout_marginStart="@dimen/_20sdp"
-        android:layout_marginTop="@dimen/_28sdp"
-        android:background="@drawable/custom_ripple_effect"
-        android:clickable="true"
-        android:outlineAmbientShadowColor="#4D262D33"
-        android:outlineSpotShadowColor="#4D262D33"
-        app:cardCornerRadius="9dp"
-        app:cardElevation="5dp"
-        app:cardMaxElevation="10dp"
-        app:contentPadding="@dimen/_4sdp">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_arrow_back" />
-
-
-    </com.google.android.material.card.MaterialCardView>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/cvBack"
         android:fillViewport="true"
         android:fitsSystemWindows="true"
         android:scrollIndicators="none">
@@ -40,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:layout_gravity="center"
             android:orientation="vertical">
 
             <LinearLayout
@@ -62,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20sdp"
                     android:text="E-mail"
-                    android:textColor="@color/spanish_gray"
+                    android:textColor="@color/spanishGray"
                     android:textSize="@dimen/_12ssp" />
 
                 <EditText
@@ -81,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20sdp"
                     android:text="Password"
-                    android:textColor="@color/spanish_gray"
+                    android:textColor="@color/spanishGray"
                     android:textSize="@dimen/_12ssp" />
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -118,6 +95,7 @@
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btLogin"
                     style="@style/Button.Normal"
+                    android:layout_marginTop="@dimen/_25sdp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="LOGIN"
@@ -128,6 +106,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:paddingVertical="@dimen/_12sdp"
                     android:text="@string/dont_have_an_account_sign_up"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12ssp" />
@@ -135,7 +114,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_12sdp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 

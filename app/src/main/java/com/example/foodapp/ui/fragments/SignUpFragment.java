@@ -21,26 +21,11 @@ public class SignUpFragment extends Fragment {
 
     private FragmentSignUpBinding binding;
     private AuthViewModel viewModel;
-
-    private Runnable showLogin;
-
-    public Runnable getShowLogin() {
-        return showLogin;
-    }
-
-    public void setShowLogin(Runnable showLogin) {
-        this.showLogin = showLogin;
-    }
-
-    public Runnable getShowHome() {
-        return showHome;
-    }
+    private Runnable showHome;
 
     public void setShowHome(Runnable showHome) {
         this.showHome = showHome;
     }
-
-    private Runnable showHome;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,13 +50,14 @@ public class SignUpFragment extends Fragment {
     private void setupView() {
         String fullString = getString(R.string.already_have_an_account_login);
         String partString = getString(R.string.login);
-        SpannableString spannableString = new Utils().setColorString(fullString, partString, requireContext(), R.color.orange);
+        SpannableString spannableString = Utils.setColorString(fullString, partString, requireContext(), R.color.orange);
         binding.tvLogin.setText(spannableString);
         binding.tvLogin.setOnClickListener(view -> {
-            if (showLogin != null)
-                showLogin.run();
+            requireActivity().getSupportFragmentManager().popBackStack();
         });
-
+        binding.cvBack.setOnClickListener(view -> {
+            requireActivity().getSupportFragmentManager().popBackStack();
+        });
         binding.btSignUp.setOnClickListener(view -> {
             String email = binding.edtEmail.getText().toString().trim();
             String password = binding.edtPassword.getText().toString().trim();
@@ -92,7 +78,7 @@ public class SignUpFragment extends Fragment {
         } else if (email.isEmpty()) {
             binding.edtEmail.setError("Enter email");
             return false;
-        } else if (!new Utils().isValidEmail(email)) {
+        } else if (!Utils.isValidEmail(email)) {
             binding.edtEmail.setError("Incorrect format email");
             return false;
         } else if (password.isEmpty()) {

@@ -22,6 +22,12 @@ public class LoginFragment extends Fragment {
     private AuthViewModel viewModel;
     private Runnable onLoginSuccess;
 
+    public void setShowSignUp(Runnable showSignUp) {
+        this.showSignUp = showSignUp;
+    }
+
+    Runnable showSignUp;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,10 +50,11 @@ public class LoginFragment extends Fragment {
     private void setupView() {
         String fullString = getString(R.string.dont_have_an_account_sign_up);
         String partString = getString(R.string.sign_up);
-        SpannableString spannableString = new Utils().setColorString(fullString, partString, requireContext(), R.color.orange);
+        SpannableString spannableString = Utils.setColorString(fullString, partString, requireContext(), R.color.orange);
         binding.tvSignUp.setText(spannableString);
-        binding.cvBack.setOnClickListener(view -> {
-            requireActivity().getSupportFragmentManager().popBackStack();
+        binding.tvSignUp.setOnClickListener(view -> {
+            if (showSignUp != null)
+                showSignUp.run();
         });
         binding.btLogin.setOnClickListener(view -> {
             String email = binding.edtEmail.getText().toString().trim();
@@ -65,7 +72,7 @@ public class LoginFragment extends Fragment {
         if (email.isEmpty()) {
             binding.edtEmail.setError("Enter email");
             return false;
-        } else if (!new Utils().isValidEmail(email)) {
+        } else if (!Utils.isValidEmail(email)) {
             binding.edtEmail.setError("Incorrect format email");
             return false;
         } else if (password.isEmpty()) {

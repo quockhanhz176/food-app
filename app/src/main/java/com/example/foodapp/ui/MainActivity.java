@@ -19,13 +19,12 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
-    private GestureDetectorCompat gestureDetectorCompat;
-    private ActivityMainBinding binding;
-    private FirebaseAuth firebaseAuth;
-
     private final LoginFragment loginFragment = new LoginFragment();
     private final SignUpFragment signUpFragment = new SignUpFragment();
     private final RecipeFragment recipeFragment = new RecipeFragment();
+    private GestureDetectorCompat gestureDetectorCompat;
+    private ActivityMainBinding binding;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +43,10 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() != null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, recipeFragment)
-                    .commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeFragment).commit();
         } else {
             if (savedInstanceState == null) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, signUpFragment)
-                        .commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, loginFragment).commit();
             }
         }
     }
@@ -69,15 +64,13 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeFragment, RecipeFragment.class.getCanonicalName()).commit();
         });
 
-        signUpFragment.setShowLogin(() -> {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, loginFragment, SignUpFragment.class.getCanonicalName()).addToBackStack(SignUpFragment.class.getCanonicalName()).commit();
+        loginFragment.setShowSignUp(()->{
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, signUpFragment, LoginFragment.class.getCanonicalName()).addToBackStack(LoginFragment.class.getCanonicalName()).commit();
         });
 
         signUpFragment.setShowHome(() -> {
             Utils.clearAllFragment(this);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, recipeFragment, RecipeFragment.class.getCanonicalName()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeFragment, RecipeFragment.class.getCanonicalName()).commit();
         });
     }
 
