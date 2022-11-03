@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.Px;
 import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.paging.PagingData;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,20 +31,26 @@ public class RecipeFragment extends Fragment {
     private RecipeViewModel recipeViewModel;
     private UserViewModel userViewModel;
     private int surfVp2lastPosition = -1;
-    private Observer<PagingData<Recipe>> recipeObserver;
     private RecipeAdapter adapter;
     private MotionLayout.TransitionListener recipeDetailTransitionListener;
+
+    private boolean isSavedRecipeList = false;
+    private List<Recipe> savedRecipeList;
+    private Integer itemPosition;
 
     public void setRecipeDetailTransitionListener(MotionLayout.TransitionListener recipeDetailTransitionListener) {
         this.recipeDetailTransitionListener = recipeDetailTransitionListener;
     }
 
-    public void setRecipeList(List<Recipe> list) {
-        if (recipeObserver != null) {
-            recipeViewModel.getRecipeLiveData().removeObserver(recipeObserver);
-        }
+    public void setRecipeList(List<Recipe> list, @Nullable Integer position) {
+        isSavedRecipeList = true;
+        savedRecipeList = list;
+        itemPosition = position;
+
         if (adapter != null) {
             adapter.submitData(getLifecycle(), PagingData.from(list));
+            if (position != null && surfVp2 != null)
+                surfVp2.post(() -> surfVp2.setCurrentItem(position, true));
         }
     }
 
@@ -132,9 +137,15 @@ public class RecipeFragment extends Fragment {
             }
         });
 
-        recipeObserver = (Observer<PagingData<Recipe>>) recipePagingData -> adapter.submitData(getLifecycle(), recipePagingData);
-        recipeViewModel.getRecipeLiveData().observe(
-                getViewLifecycleOwner(), recipeObserver
-        );
+        if (!isSavedRecipeList) {
+            recipeViewModel.getRecipeLiveData().observe(
+                    getViewLifecycleOwner(), recipePagingData -> adapter.submitData(getLifecycle(), recipePagingData)
+            );
+        } else {
+            adapter.submitData(getLifecycle(), PagingData.from(savedRecipeList));
+            if (itemPosition != null) {
+                surfVp2.post(() -> surfVp2.setCurrentItem(itemPosition, true));
+            }
+        }
     }
 }

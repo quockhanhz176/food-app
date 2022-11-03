@@ -1,7 +1,6 @@
 package com.example.foodapp.viewmodel;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,6 +43,10 @@ public class RecipeViewModel extends AndroidViewModel {
     public RecipeViewModel(@NonNull Application application) {
         super(application);
         recipeRepository = RecipeRepository.getInstance();
+        setDefaultSearchParams();
+    }
+
+    public void setDefaultSearchParams() {
         setSearchParams("", null, null, null, null);
     }
 
