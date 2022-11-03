@@ -1,5 +1,7 @@
 package com.example.foodapp.repository.model;
 
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
 public class RecipeResponse {
@@ -27,6 +29,7 @@ public class RecipeResponse {
         this.key = key;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "RecipeResponse{" +

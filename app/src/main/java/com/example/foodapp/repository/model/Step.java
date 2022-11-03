@@ -1,11 +1,12 @@
 package com.example.foodapp.repository.model;
 
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
-public class Instruction {
+public class Step {
     private int number;
     private String step;
-
     private List<Ingredient> ingredients;
     private List<Equipment> equipment;
 
@@ -25,9 +26,10 @@ public class Instruction {
         return equipment;
     }
 
+    @NonNull
     @Override
     public String toString() {
-        return "Instruction{" +
+        return "Step{" +
                 "number=" + number +
                 ", step='" + step + '\'' +
                 ", ingredients=" + ingredients +

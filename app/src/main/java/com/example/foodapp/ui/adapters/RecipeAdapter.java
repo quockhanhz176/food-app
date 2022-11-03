@@ -1,20 +1,27 @@
-package com.example.foodapp.ui.adapter;
+package com.example.foodapp.ui.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.motion.widget.MotionLayout;
+import androidx.core.text.HtmlCompat;
 import androidx.paging.PagingDataAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodapp.R;
 import com.example.foodapp.repository.model.Recipe;
+import com.example.foodapp.ui.customviews.NonScrollableListView;
+import com.google.android.material.card.MaterialCardView;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 public class RecipeAdapter extends PagingDataAdapter<Recipe, RecipeAdapter.RecipeViewHolder> {
 
@@ -47,11 +54,20 @@ public class RecipeAdapter extends PagingDataAdapter<Recipe, RecipeAdapter.Recip
     public static class RecipeViewHolder extends RecyclerView.ViewHolder {
         private ImageView foodIv;
         private TextView foodTitleTv;
-        private TextView descriptionTv;
-
         private TextView readyTimeContentTv;
         private TextView servingsContent;
         private TextView healthContentScore;
+        private MaterialCardView likeButtonMcv;
+        private MaterialCardView saveButtonMcv;
+        private ImageView likeButtonIv;
+        private ImageView saveButtonIv;
+
+        private ScrollView detailSv;
+        private TextView svTitle;
+        private TextView svSummaryTv;
+        private TextView svInstructionTitleTv;
+        private NonScrollableListView svInstructionLv;
+        private InstructionAdapter adapter;
 
         public RecipeViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -60,9 +76,7 @@ public class RecipeAdapter extends PagingDataAdapter<Recipe, RecipeAdapter.Recip
 
         public void setRecipe(Recipe recipe) {
             foodTitleTv.setText(recipe.getTitle());
-            descriptionTv.setText(recipe.toString());
             Picasso.get().load(recipe.getImage()).into(foodIv);
-
             readyTimeContentTv.setText(
                     itemView.getResources().getQuantityString(
                             R.plurals.recipe_layout_subtitle_ready_time_content,
@@ -83,20 +97,60 @@ public class RecipeAdapter extends PagingDataAdapter<Recipe, RecipeAdapter.Recip
                             recipe.getHealthScore()
                     )
             );
+
+            svTitle.setText(recipe.getTitle());
+            svSummaryTv.setText(
+                    HtmlCompat.fromHtml(recipe.getSummary(), HtmlCompat.FROM_HTML_MODE_LEGACY)
+            );
+            if (recipe.getAnalyzedInstructions().isEmpty()) {
+                adapter.setData(new ArrayList<>());
+                svInstructionTitleTv.setText("");
+            } else {
+                adapter.setData(recipe.getAnalyzedInstructions().get(0).getSteps());
+                svInstructionTitleTv.setText(
+                        itemView.getResources().getString(R.string.recipe_sv_instruction_title)
+                );
+            }
+            svInstructionLv.requestLayout();
+            svInstructionLv.invalidate();
         }
 
         private void bindView() {
             foodIv = itemView.findViewById(R.id.foodSiv);
             foodTitleTv = itemView.findViewById(R.id.foodTitleTv);
-            descriptionTv = itemView.findViewById(R.id.descriptionTv);
-
             readyTimeContentTv = itemView.findViewById(R.id.readyTimeContentTv);
             servingsContent = itemView.findViewById(R.id.servingContentTv);
             healthContentScore = itemView.findViewById(R.id.healthScoreContentTv);
+            likeButtonMcv = itemView.findViewById(R.id.likeButtonMcv);
+            saveButtonMcv = itemView.findViewById(R.id.saveButtonMcv);
+            likeButtonIv = itemView.findViewById(R.id.likeButtonIv);
+            saveButtonIv = itemView.findViewById(R.id.saveButtonIv);
+
+            detailSv = itemView.findViewById(R.id.detailSv);
+            svTitle = itemView.findViewById(R.id.svTitleTv);
+            svSummaryTv = itemView.findViewById(R.id.svSummaryTv);
+            svInstructionTitleTv = itemView.findViewById(R.id.svInstructionTitleTv);
+            svInstructionLv = itemView.findViewById(R.id.svInstructionLv);
+            adapter = new InstructionAdapter();
+            svInstructionLv.setAdapter(adapter);
+
+            likeButtonMcv.setOnClickListener(view -> {
+                likeButtonIv.setSelected(!likeButtonIv.isSelected());
+            });
+            saveButtonMcv.setOnClickListener(view -> {
+                saveButtonIv.setSelected(!saveButtonIv.isSelected());
+            });
         }
 
         public void resetLayout() {
             ((MotionLayout) itemView).jumpToState(R.id.introductionCs);
+            detailSv.scrollTo(0, 0);
+
+        }
+
+        public void setUserEnabled(boolean value) {
+            ((MotionLayout) itemView).enableTransition(R.id.detailT, value);
+//            detailSv.setOnTouchListener((view, motionEvent) -> false);
         }
     }
 

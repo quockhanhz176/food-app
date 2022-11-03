@@ -1,5 +1,7 @@
 package com.example.foodapp.repository.model;
 
+import androidx.annotation.NonNull;
+
 public class Equipment {
     private int id;
     private String name;
@@ -17,6 +19,7 @@ public class Equipment {
         return localizedName;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Equipment{" +
