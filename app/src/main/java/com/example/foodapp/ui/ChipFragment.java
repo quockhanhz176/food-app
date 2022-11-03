@@ -12,11 +12,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.foodapp.R;
-import com.example.foodapp.repository.api.enums.Cuisine;
-import com.example.foodapp.repository.api.enums.Flavor;
-import com.example.foodapp.repository.api.enums.FoodTag;
-import com.example.foodapp.repository.api.enums.Intolerance;
-import com.example.foodapp.repository.api.enums.MealType;
+import com.example.foodapp.repository.enums.Cuisine;
+import com.example.foodapp.repository.enums.Flavor;
+import com.example.foodapp.repository.enums.FoodTag;
+import com.example.foodapp.repository.enums.Intolerance;
+import com.example.foodapp.repository.enums.MealType;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
@@ -163,5 +163,37 @@ public class ChipFragment extends Fragment {
 
             return;
         }
+    }
+
+    public ArrayList<Cuisine> getSelectedCuisines() {
+        return selectedCuisines;
+    }
+
+    public ArrayList<Flavor> getSelectedFlavors() {
+        return selectedFlavors;
+    }
+
+    public ArrayList<Intolerance> getSelectedIntolerances() {
+        return selectedIntolerances;
+    }
+
+    public ArrayList<MealType> getSelectedMealTypes() {
+        return selectedMealTypes;
+    }
+
+    public void setSelectedCuisines(ArrayList<Cuisine> selectedCuisines) {
+        this.selectedCuisines = selectedCuisines;
+    }
+
+    public void setSelectedFlavors(ArrayList<Flavor> selectedFlavors) {
+        this.selectedFlavors = selectedFlavors;
+    }
+
+    public void setSelectedIntolerances(ArrayList<Intolerance> selectedIntolerances) {
+        this.selectedIntolerances = selectedIntolerances;
+    }
+
+    public void setSelectedMealTypes(ArrayList<MealType> selectedMealTypes) {
+        this.selectedMealTypes = selectedMealTypes;
     }
 }
