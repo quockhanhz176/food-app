@@ -1,6 +1,6 @@
 package com.example.foodapp.repository;
 
-import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -25,11 +26,17 @@ public class RecipeRepository {
     private static final String RECIPE_BASE_URL = "https://api.spoonacular.com";
     private final IRecipeRepository recipeRepository;
 
-    private Application application;
+    private static RecipeRepository instance;
 
-    public RecipeRepository(Application application) {
-        this.application = application;
+    public synchronized static RecipeRepository getInstance() {
+        if (instance == null) {
+            instance = new RecipeRepository();
+        }
 
+        return instance;
+    }
+
+    private RecipeRepository() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(RECIPE_BASE_URL)
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
@@ -62,13 +69,15 @@ public class RecipeRepository {
                 cuisineString,
                 intoleranceString,
                 mealTypeString
-        ).firstOrError().map(
+        ).subscribeOn(Schedulers.io()).firstOrError().map(
                 response -> new RecipeResponse(response.getResults(), nextPageNumber)
         );
     }
 
     public Single<Recipe> getRecipeById(int recipeId) {
-        return recipeRepository.getRecipeById(recipeId).firstOrError();
+        return recipeRepository.getRecipeById(recipeId)
+                .subscribeOn(Schedulers.io())
+                .firstOrError();
     }
 
     private String transformTag(FoodTag tag) {

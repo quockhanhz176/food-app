@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
+    tools:context=".ui.fragments.SavedRecipesFragment">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/titleCv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="@dimen/saved_recipe_title_padding"
+            android:text="@string/saved_recipes_title"
+            android:textSize="@dimen/saved_recipe_title_text_size" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/savedRecipesRv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:padding="@dimen/saved_recipe_list_padding"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleCv" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

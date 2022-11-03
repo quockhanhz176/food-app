@@ -83,7 +83,7 @@ public class Recipe {
             return false;
         }
         Recipe recipe = (Recipe) o;
-        return id == recipe.id && readyInMinutes == recipe.readyInMinutes && servings == recipe.servings && healthScore == recipe.healthScore && title.equals(recipe.title) && image.equals(recipe.image) && imageType.equals(recipe.imageType) && cuisines.equals(recipe.cuisines) && analyzedInstructions.equals(recipe.analyzedInstructions);
+        return id == recipe.id;
     }
 
     @Override

@@ -56,8 +56,8 @@ public class RecipePagingSource extends RxPagingSource<Integer, Recipe> {
         }
 
         return repo.searchRecipe(query, cuisines, flavors, intolerances, mealTypes, nextPageNumber)
-                .subscribeOn(Schedulers.io())
                 .map(this::toLoadResult)
+                .subscribeOn(Schedulers.io())
                 .onErrorReturn(LoadResult.Error::new);
     }
 

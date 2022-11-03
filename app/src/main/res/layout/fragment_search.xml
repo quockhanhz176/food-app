@@ -4,15 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:padding="@dimen/search_padding"
     tools:context=".ui.fragments.SearchFragment">
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchSv"
-        app:iconifiedByDefault="false"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/search_search_margin_end"
         android:imeOptions="actionSearch"
         android:theme="@style/SearchBarTheme"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        app:iconifiedByDefault="false"
+        app:layout_constraintEnd_toStartOf="@id/userIconIv"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/userIconIv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/chinese"
+        app:layout_constraintBottom_toBottomOf="@id/searchSv"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/searchSv" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,19 +3,20 @@ package com.example.foodapp.ui.customviews;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
-public class NonScrollableListView extends ListView {
+import androidx.recyclerview.widget.RecyclerView;
 
-    public NonScrollableListView(Context context) {
+public class NonScrollableRecyclerView extends RecyclerView {
+
+    public NonScrollableRecyclerView(Context context) {
         super(context);
     }
 
-    public NonScrollableListView(Context context, AttributeSet attrs) {
+    public NonScrollableRecyclerView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public NonScrollableListView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public NonScrollableRecyclerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 

@@ -35,7 +35,6 @@ public interface IRecipeRepository {
             "User-Agent: FoodApp",
             "x-api-key: " + AppConfig.RECIPE_API_KEY,
     })
-    @GET("recipes/:id/")
+    @GET("recipes/{id}/information")
     Observable<Recipe> getRecipeById(@Path("id") int recipeId);
-
 }

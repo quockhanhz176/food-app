@@ -12,11 +12,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class UserRepository {
 
@@ -83,7 +84,7 @@ public class UserRepository {
         });
     }
 
-    public void setRecipes(RecipeType recipeType, ArrayList<Integer> recipeIdList,
+    public void setRecipes(RecipeType recipeType, List<Integer> recipeIdList,
                            @Nullable Consumer<Task> onComplete)
             throws InputMismatchException {
         if (onComplete == null || currentUser == null) {
@@ -96,7 +97,7 @@ public class UserRepository {
         currentUser.updateChildren(userUpdate).addOnCompleteListener(onComplete::accept);
     }
 
-    public void getRecipes(RecipeType recipeType, @Nullable Consumer<ArrayList<Integer>> onComplete)
+    public void getRecipes(RecipeType recipeType, @Nullable Consumer<List<Integer>> onComplete)
             throws InputMismatchException {
         if (currentUser == null) {
             throw new InputMismatchException("Invalid email provided");
@@ -112,39 +113,51 @@ public class UserRepository {
                 return;
             }
 
-            GenericTypeIndicator<ArrayList<Integer>> resultType =
-                    new GenericTypeIndicator<ArrayList<Integer>>() {
+            GenericTypeIndicator<Map<String, Long>> resultType =
+                    new GenericTypeIndicator<Map<String, Long>>() {
                     };
-            ArrayList<Integer> recipeIds = snapshot.getValue(resultType);
+            Map<String, Long> recipeIds = snapshot.getValue(resultType);
+            List<Integer> recipeIdList = recipeIds.values().stream().map(Long::intValue).collect(Collectors.toList());
 
-            onComplete.accept(recipeIds);
+            onComplete.accept(recipeIdList);
         });
     }
 
+
     public void addRecipe(RecipeType recipeType, int recipeId, @Nullable Consumer<Task> onComplete)
             throws InputMismatchException {
-        if (onComplete == null || currentUser == null) {
+        if (currentUser == null) {
             throw new InputMismatchException("Invalid email provided");
         }
 
         Map<String, Object> userUpdate = new HashMap<>();
 
         userUpdate.put("/" + recipeType.value + "/" + recipeId, recipeId);
-        currentUser.updateChildren(userUpdate).addOnCompleteListener(onComplete::accept);
+        currentUser.updateChildren(userUpdate).addOnCompleteListener(task -> {
+            if (onComplete == null) {
+                return;
+            }
+            onComplete.accept(task);
+        });
     }
 
     public void deleteRecipeById(
             RecipeType recipeType, int recipeId,
             @Nullable Consumer<Task> onComplete
     ) throws InputMismatchException {
-        if (onComplete == null || currentUser == null) {
+        if (currentUser == null) {
             throw new InputMismatchException("Invalid email provided");
         }
 
         Map<String, Object> userUpdate = new HashMap<>();
 
         userUpdate.put("/" + recipeType.value + "/" + recipeId, null);
-        currentUser.updateChildren(userUpdate).addOnCompleteListener(onComplete::accept);
+        currentUser.updateChildren(userUpdate).addOnCompleteListener(task -> {
+            if (onComplete == null) {
+                return;
+            }
+            onComplete.accept(task);
+        });
     }
 }
 

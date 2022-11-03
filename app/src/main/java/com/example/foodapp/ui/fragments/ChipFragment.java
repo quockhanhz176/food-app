@@ -1,4 +1,4 @@
-package com.example.foodapp.ui;
+package com.example.foodapp.ui.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -160,8 +160,6 @@ public class ChipFragment extends Fragment {
 
                 selectedMealTypes.remove(foodTag);
             }
-
-            return;
         }
     }
 

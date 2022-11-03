@@ -63,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20sdp"
                     android:text="Full name"
-                    android:textColor="@color/spanishGray"
+                    android:textColor="@color/spanish_gray"
                     android:textSize="@dimen/_12ssp" />
 
                 <EditText
@@ -83,7 +83,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20sdp"
                     android:text="E-mail"
-                    android:textColor="@color/spanishGray"
+                    android:textColor="@color/spanish_gray"
                     android:textSize="@dimen/_12ssp" />
 
                 <EditText
@@ -103,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20sdp"
                     android:text="Password"
-                    android:textColor="@color/spanishGray"
+                    android:textColor="@color/spanish_gray"
                     android:textSize="@dimen/_12ssp" />
 
                 <com.google.android.material.textfield.TextInputLayout
