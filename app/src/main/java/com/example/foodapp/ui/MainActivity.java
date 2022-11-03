@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeFragment).commit();
         } else {
             if (savedInstanceState == null) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, signUpFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, loginFragment).commit();
             }
         }
     }
@@ -64,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeFragment, RecipeFragment.class.getCanonicalName()).commit();
         });
 
-        signUpFragment.setShowLogin(() -> {
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, loginFragment, SignUpFragment.class.getCanonicalName()).addToBackStack(SignUpFragment.class.getCanonicalName()).commit();
+        loginFragment.setShowSignUp(()->{
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, signUpFragment, LoginFragment.class.getCanonicalName()).addToBackStack(LoginFragment.class.getCanonicalName()).commit();
         });
 
         signUpFragment.setShowHome(() -> {
