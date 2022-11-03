@@ -15,10 +15,18 @@ import com.example.foodapp.R;
 import com.example.foodapp.repository.model.Recipe;
 import com.squareup.picasso.Picasso;
 
+import java.util.function.Consumer;
+
 public class SavedRecipeAdapter extends ListAdapter<Recipe, SavedRecipeAdapter.SavedRecipeViewHolder> {
 
     public SavedRecipeAdapter() {
         super(new RecipeComparator());
+    }
+
+    private Consumer<Recipe> itemOnClickListener;
+
+    public void setItemOnClickListener(Consumer<Recipe> itemOnClickListener) {
+        this.itemOnClickListener = itemOnClickListener;
     }
 
     @NonNull
@@ -33,13 +41,21 @@ public class SavedRecipeAdapter extends ListAdapter<Recipe, SavedRecipeAdapter.S
         holder.setRecipe(getItem(position));
     }
 
-    public static class SavedRecipeViewHolder extends RecyclerView.ViewHolder {
+    public class SavedRecipeViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imageIv;
-        TextView titleTv;
+        private ImageView imageIv;
+        private TextView titleTv;
+        private Recipe recipe;
 
         public SavedRecipeViewHolder(@NonNull View itemView) {
             super(itemView);
+            itemView.setOnClickListener(
+                    view -> {
+                        if (itemOnClickListener != null) {
+                            itemOnClickListener.accept(recipe);
+                        }
+                    }
+            );
             bindView();
         }
 
@@ -48,7 +64,12 @@ public class SavedRecipeAdapter extends ListAdapter<Recipe, SavedRecipeAdapter.S
             titleTv = itemView.findViewById(R.id.itemTitleTv);
         }
 
+        public Recipe getRecipe() {
+            return recipe;
+        }
+
         public void setRecipe(Recipe recipe) {
+            this.recipe = recipe;
             Picasso.get().load(recipe.getImage()).into(imageIv);
             titleTv.setText(recipe.getTitle());
         }
