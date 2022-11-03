@@ -9,11 +9,11 @@ android {
     defaultConfig {
         applicationId "com.example.foodapp"
         minSdk 26
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.cuisine_layout.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -44,6 +44,7 @@ dependencies {
 
     implementation "androidx.lifecycle:lifecycle-viewmodel:2.5.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
+    implementation "com.google.android.material:material:1.3.0-alpha03"
 
     implementation('com.squareup.retrofit2:retrofit:2.3.0')
             {
@@ -63,9 +64,13 @@ dependencies {
     implementation 'com.google.gms:google-services:4.3.14'
 
     testImplementation 'junit:junit:4.13.2'
+
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     implementation 'com.intuit.sdp:sdp-android:1.1.0'
     implementation 'com.intuit.ssp:ssp-android:1.1.0'
+
+    androidTestImplementation 'androidx.cuisine_layout.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.cuisine_layout.espresso:espresso-core:3.4.0'
 }

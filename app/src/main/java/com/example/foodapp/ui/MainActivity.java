@@ -43,10 +43,12 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() != null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeFragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    recipeFragment).commit();
         } else {
             if (savedInstanceState == null) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, loginFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        loginFragment).commit();
             }
         }
     }
@@ -61,16 +63,19 @@ public class MainActivity extends AppCompatActivity {
     private void setupFragments() {
         loginFragment.setOnLoginSuccess(() -> {
             Utils.clearAllFragment(this);
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeFragment, RecipeFragment.class.getCanonicalName()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    recipeFragment, RecipeFragment.class.getCanonicalName()).commit();
         });
 
-        loginFragment.setShowSignUp(()->{
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, signUpFragment, LoginFragment.class.getCanonicalName()).addToBackStack(LoginFragment.class.getCanonicalName()).commit();
+        loginFragment.setShowSignUp(() -> {
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,
+                    signUpFragment, LoginFragment.class.getCanonicalName()).addToBackStack(LoginFragment.class.getCanonicalName()).commit();
         });
 
         signUpFragment.setShowHome(() -> {
             Utils.clearAllFragment(this);
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeFragment, RecipeFragment.class.getCanonicalName()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    recipeFragment, RecipeFragment.class.getCanonicalName()).commit();
         });
     }
 

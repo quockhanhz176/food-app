@@ -32,4 +32,8 @@
         <item quantity="one">Equipment: %s</item>
         <item quantity="other">Equipments: %s</item>
     </plurals>
+    <string name="suggest_cuisine">What are your favorite cuisines?</string>
+    <string name="suggest_flavor">What are your favorite flavors?</string>
+    <string name="suggest_intolerances">What are your food intolerances?</string>
+    <string name="suggest_type">What are your favorite meal types?</string>
 </resources>

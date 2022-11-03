@@ -11,7 +11,13 @@
     <color name="spanishGray">#9796A1</color>
     <color name="orange">#FE724C</color>
     <color name="cultured">#F0F0F0</color>
+
     <color name="spanish_gray">#9796A1</color>
     <color name="black_overlay">#DD000000</color>
     <color name="sonic_silver">#737373</color>
+
+    <color name="chip_checked">#50c594</color>
+    <color name="chip_unchecked">#f0f3e8</color>
+    <color name="chip_text_checked">#191c18</color>
+    <color name="chip_text_unchecked">#191c18</color>
 </resources>
