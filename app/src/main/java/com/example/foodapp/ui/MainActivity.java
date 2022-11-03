@@ -10,21 +10,24 @@ import androidx.core.view.GestureDetectorCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.foodapp.R;
-import com.google.firebase.FirebaseApp;
 import com.example.foodapp.databinding.ActivityMainBinding;
-import com.example.foodapp.ui.login.LoginFragment;
-import com.example.foodapp.ui.sign_up.SignUpFragment;
+import com.example.foodapp.firebase.entity.UserPreference;
+import com.example.foodapp.ui.fragments.LoginFragment;
+import com.example.foodapp.ui.fragments.RecipeFragment;
+import com.example.foodapp.ui.fragments.SignUpFragment;
+import com.example.foodapp.ui.util.Utils;
+import com.example.foodapp.viewmodel.UserViewModel;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
-    private GestureDetectorCompat gestureDetectorCompat;
-    private ActivityMainBinding binding;
-    private FirebaseAuth firebaseAuth;
-
     private final LoginFragment loginFragment = new LoginFragment();
     private final SignUpFragment signUpFragment = new SignUpFragment();
     private final RecipeFragment recipeFragment = new RecipeFragment();
+    private GestureDetectorCompat gestureDetectorCompat;
+    private ActivityMainBinding binding;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +43,10 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() != null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, recipeFragment)
-                    .commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeFragment).commit();
         } else {
             if (savedInstanceState == null) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, signUpFragment)
-                        .commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, signUpFragment).commit();
             }
         }
     }
@@ -66,14 +65,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
         signUpFragment.setShowLogin(() -> {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, loginFragment, SignUpFragment.class.getCanonicalName()).addToBackStack(SignUpFragment.class.getCanonicalName()).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, loginFragment, SignUpFragment.class.getCanonicalName()).addToBackStack(SignUpFragment.class.getCanonicalName()).commit();
         });
 
         signUpFragment.setShowHome(() -> {
             Utils.clearAllFragment(this);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, recipeFragment, RecipeFragment.class.getCanonicalName()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeFragment, RecipeFragment.class.getCanonicalName()).commit();
         });
     }
 
