@@ -21,16 +21,6 @@ public class Utils {
         return spannableString;
     }
 
-    static public void clearAllFragment(FragmentActivity fragmentActivity) {
-        try {
-            for (int i = 0; i <= fragmentActivity.getSupportFragmentManager().getBackStackEntryCount(); i++) {
-                fragmentActivity.getSupportFragmentManager().popBackStack();
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
     static public boolean isValidEmail(CharSequence target) {
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }

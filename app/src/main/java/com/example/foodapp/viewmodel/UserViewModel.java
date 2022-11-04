@@ -41,6 +41,7 @@ public class UserViewModel extends AndroidViewModel {
         userRepository = UserRepository.getCurrentUser(authInfo.getEmail());
         fetchRecipes(RecipeType.LIKED);
         fetchRecipes(RecipeType.SAVED);
+        fetchUserPreferences();
     }
 
     public void fetchUserPreferences() {

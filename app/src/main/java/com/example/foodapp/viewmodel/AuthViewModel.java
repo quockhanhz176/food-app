@@ -16,7 +16,8 @@ public class AuthViewModel extends AndroidViewModel {
 
     public AuthViewModel(@NonNull Application application) {
         super(application);
-        authRepository = new AuthRepository(application);
+
+        authRepository = new AuthRepository();
         userMutableLiveData = authRepository.getUserMutableLiveData();
     }
 

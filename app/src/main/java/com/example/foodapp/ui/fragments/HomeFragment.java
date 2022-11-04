@@ -90,4 +90,13 @@ public class HomeFragment extends Fragment {
             });
         }
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        recipeFragment = null;
+        searchFragment = null;
+        layout = null;
+    }
 }

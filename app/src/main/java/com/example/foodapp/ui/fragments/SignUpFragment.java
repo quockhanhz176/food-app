@@ -5,8 +5,8 @@ import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -32,16 +32,15 @@ public class SignUpFragment extends Fragment {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         viewModel.getUserMutableLiveData().observe(this, firebaseUser -> {
-            if (firebaseUser != null) {
-                Toast.makeText(requireContext(), "Create account successfully", Toast.LENGTH_SHORT).show();
-                if (showHome != null)
-                    showHome.run();
+            if (firebaseUser != null && showHome != null && getActivity() != null) {
+                getActivity().runOnUiThread(showHome);
             }
         });
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         binding = FragmentSignUpBinding.inflate(inflater, container, false);
         setupView();
         return binding.getRoot();
@@ -50,7 +49,9 @@ public class SignUpFragment extends Fragment {
     private void setupView() {
         String fullString = getString(R.string.already_have_an_account_login);
         String partString = getString(R.string.login);
-        SpannableString spannableString = Utils.setColorString(fullString, partString, requireContext(), R.color.orange);
+        SpannableString spannableString = Utils.setColorString(fullString, partString,
+                requireContext(), R.color.orange);
+
         binding.tvLogin.setText(spannableString);
         binding.tvLogin.setOnClickListener(view -> {
             requireActivity().getSupportFragmentManager().popBackStack();
@@ -91,7 +92,9 @@ public class SignUpFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
         binding = null;
+        viewModel = null;
     }
 
 }

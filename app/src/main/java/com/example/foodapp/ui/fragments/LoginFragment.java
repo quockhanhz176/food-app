@@ -5,7 +5,6 @@ import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -30,18 +29,22 @@ public class LoginFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(null);
+
         viewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         viewModel.getUserMutableLiveData().observe(this, firebaseUser -> {
             if (firebaseUser != null) {
-                Toast.makeText(requireContext(), "Login Successfully", Toast.LENGTH_SHORT).show();
-                if (onLoginSuccess != null) onLoginSuccess.run();
+                if (onLoginSuccess != null && getActivity() != null) {
+                    getActivity().runOnUiThread(onLoginSuccess);
+                }
+
             }
         });
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
         setupView();
         return binding.getRoot();
@@ -50,11 +53,13 @@ public class LoginFragment extends Fragment {
     private void setupView() {
         String fullString = getString(R.string.dont_have_an_account_sign_up);
         String partString = getString(R.string.sign_up);
-        SpannableString spannableString = Utils.setColorString(fullString, partString, requireContext(), R.color.orange);
+        SpannableString spannableString = Utils.setColorString(fullString, partString,
+                requireContext(), R.color.orange);
         binding.tvSignUp.setText(spannableString);
         binding.tvSignUp.setOnClickListener(view -> {
-            if (showSignUp != null)
+            if (showSignUp != null) {
                 showSignUp.run();
+            }
         });
         binding.btLogin.setOnClickListener(view -> {
             String email = binding.edtEmail.getText().toString().trim();

@@ -7,11 +7,13 @@ import android.view.WindowManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GestureDetectorCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.foodapp.R;
 import com.example.foodapp.databinding.ActivityMainBinding;
 import com.example.foodapp.repository.model.Recipe;
+import com.example.foodapp.ui.fragments.ChipFragment;
 import com.example.foodapp.ui.fragments.HomeFragment;
 import com.example.foodapp.ui.fragments.LoginFragment;
 import com.example.foodapp.ui.fragments.RecipeFragment;
@@ -19,7 +21,6 @@ import com.example.foodapp.ui.fragments.SavedRecipesFragment;
 import com.example.foodapp.ui.fragments.SearchFragment;
 import com.example.foodapp.ui.fragments.SignUpFragment;
 import com.example.foodapp.ui.fragments.UserSettingFragment;
-import com.example.foodapp.ui.util.Utils;
 import com.example.foodapp.viewmodel.AuthViewModel;
 import com.example.foodapp.viewmodel.RecipeViewModel;
 import com.example.foodapp.viewmodel.UserViewModel;
@@ -38,11 +39,12 @@ public class MainActivity extends AppCompatActivity {
     private AuthViewModel authViewModel;
     private RecipeViewModel recipeViewModel;
 
-    private final LoginFragment loginFragment = new LoginFragment();
-    private final SignUpFragment signUpFragment = new SignUpFragment();
+    private LoginFragment loginFragment = new LoginFragment();
+    private SignUpFragment signUpFragment = new SignUpFragment();
     private final HomeFragment homeFragment = new HomeFragment();
     private final SavedRecipesFragment savedRecipesFragment = new SavedRecipesFragment();
     private final UserSettingFragment userSettingFragment = new UserSettingFragment();
+    private final ChipFragment preferenceFragment = new ChipFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,41 +73,51 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupFragments(Bundle savedInstanceState) {
-        //login fragments
-        loginFragment.setOnLoginSuccess(() -> {
-            Utils.clearAllFragment(this);
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment, RecipeFragment.class.getCanonicalName()).commit();
-        });
+        loginFragment = setupLoginFragment();
 
-        loginFragment.setShowSignUp(() -> {
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, signUpFragment, LoginFragment.class.getCanonicalName()).addToBackStack(LoginFragment.class.getCanonicalName()).commit();
-        });
+        signUpFragment = setupSignUpFragment();
 
-        signUpFragment.setShowHome(() -> {
-            Utils.clearAllFragment(this);
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment, RecipeFragment.class.getCanonicalName()).commit();
+        preferenceFragment.setOnSubmitPreferences(() -> {
+            clearAllFragment();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, homeFragment,
+                            RecipeFragment.class.getCanonicalName())
+                    .commit();
         });
 
         if (firebaseAuth.getCurrentUser() != null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
-        } else {
-            if (savedInstanceState == null) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, loginFragment).commit();
-            }
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, homeFragment)
+                    .commit();
+        } else if (savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, loginFragment)
+                    .commit();
         }
 
-        //internal fragments
+        // Internal fragments
         homeFragment.setOnUserMenuItemClickListener(new SearchFragment.OnUserMenuItemClickListener() {
             @Override
             public void onSavedRecipesClick() {
-                getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, savedRecipesFragment).addToBackStack(null).commit();
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.fragment_container, savedRecipesFragment)
+                        .addToBackStack(null)
+                        .commit();
             }
 
             @Override
             public void onLogOutClick() {
                 authViewModel.logout();
-                Utils.clearAllFragment(MainActivity.this);
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, loginFragment).commit();
+                clearAllFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, loginFragment)
+                        .detach(loginFragment)
+                        .attach(loginFragment)
+                        .commit();
             }
 
             @Override
@@ -115,7 +127,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onUserSettingsClick() {
-                getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, userSettingFragment).addToBackStack(null).commit();
+                getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,
+                        userSettingFragment).addToBackStack(null).commit();
             }
         });
 
@@ -124,8 +137,10 @@ public class MainActivity extends AppCompatActivity {
             if (recipeList != null) {
                 int position = recipeList.indexOf(recipe);
                 RecipeFragment recipeFragment = new RecipeFragment();
-                recipeFragment.setRecipeList(new ArrayList<>(recipeList), position == -1 ? null : position);
-                getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, recipeFragment).addToBackStack(null).commit();
+                recipeFragment.setRecipeList(new ArrayList<>(recipeList), position == -1 ? null :
+                        position);
+                getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,
+                        recipeFragment).addToBackStack(null).commit();
             }
         });
     }
@@ -133,5 +148,52 @@ public class MainActivity extends AppCompatActivity {
     private void initFirebase() {
         FirebaseApp.initializeApp(this);
         firebaseAuth = FirebaseAuth.getInstance();
+    }
+
+    private void clearAllFragment() {
+        try {
+            FragmentManager manager = getSupportFragmentManager();
+            for (int i = 0; i < manager.getBackStackEntryCount(); i++) {
+                manager.popBackStack();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private LoginFragment setupLoginFragment() {
+        LoginFragment loginFragment = new LoginFragment();
+
+        loginFragment.setOnLoginSuccess(() -> {
+            clearAllFragment();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, preferenceFragment,
+                            ChipFragment.class.getCanonicalName())
+                    .commit();
+        });
+
+        loginFragment.setShowSignUp(() -> {
+            signUpFragment = setupSignUpFragment();
+            getSupportFragmentManager()
+                    .beginTransaction().add(R.id.fragment_container,
+                            signUpFragment, LoginFragment.class.getCanonicalName())
+                    .addToBackStack(LoginFragment.class.getCanonicalName())
+                    .commit();
+        });
+
+        return loginFragment;
+    }
+
+    private SignUpFragment setupSignUpFragment() {
+        SignUpFragment signUpFragment = new SignUpFragment();
+
+        signUpFragment.setShowHome(() -> {
+            clearAllFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    homeFragment, RecipeFragment.class.getCanonicalName()).commit();
+        });
+
+        return signUpFragment;
     }
 }

@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_food_app">
+    android:background="@drawable/background_food_app"
+    android:transitionGroup="true">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,8 +16,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:layout_gravity="center"
+            android:gravity="center_vertical"
             android:orientation="vertical">
 
             <LinearLayout
@@ -51,7 +52,8 @@
                     android:background="@drawable/bg_edittext"
                     android:gravity="center_vertical"
                     android:hint="Your email or phone"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="textEmailAddress"
+                    android:saveEnabled="false" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -78,7 +80,8 @@
                         android:background="@drawable/bg_edittext"
                         android:gravity="center_vertical"
                         android:hint="Password"
-                        android:inputType="textPassword|textNoSuggestions" />
+                        android:inputType="textPassword|textNoSuggestions"
+                        android:saveEnabled="false" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -95,9 +98,9 @@
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btLogin"
                     style="@style/Button.Normal"
-                    android:layout_marginTop="@dimen/_25sdp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_25sdp"
                     android:text="LOGIN"
                     android:textAllCaps="true" />
 
@@ -107,6 +110,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:paddingVertical="@dimen/_12sdp"
+                    android:saveEnabled="false"
                     android:text="@string/dont_have_an_account_sign_up"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12ssp" />

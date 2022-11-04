@@ -5,18 +5,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.foodapp.R;
+import com.example.foodapp.firebase.entity.UserPreference;
 import com.example.foodapp.repository.enums.Cuisine;
 import com.example.foodapp.repository.enums.Flavor;
 import com.example.foodapp.repository.enums.FoodTag;
 import com.example.foodapp.repository.enums.Intolerance;
 import com.example.foodapp.repository.enums.MealType;
+import com.example.foodapp.viewmodel.UserViewModel;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
@@ -37,6 +39,12 @@ public class ChipFragment extends Fragment {
 
     private Button submitBtn;
 
+    private Runnable onSubmitPreferences;
+
+    private UserViewModel viewModel;
+
+    private boolean shouldShowUserPreference;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,13 +53,22 @@ public class ChipFragment extends Fragment {
         selectedFlavors = new ArrayList<>();
         selectedIntolerances = new ArrayList<>();
         selectedMealTypes = new ArrayList<>();
+
+        viewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+        viewModel.getUserPreferenceLiveData().observe(this, userPreference -> {
+            if(userPreference != null) {
+                shouldShowUserPreference = false;
+            }
+            shouldShowUserPreference = true;
+        });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_chip, container, false);
+        return inflater.inflate(R.layout.fragment_preferences, container, false);
     }
 
     @Override
@@ -78,8 +95,11 @@ public class ChipFragment extends Fragment {
     }
 
     private void handleSubmitPreferences(View view) {
-        Toast.makeText(view.getContext(), String.valueOf(selectedCuisines.size()),
-                Toast.LENGTH_SHORT).show();
+        UserPreference userPreference = new UserPreference(selectedCuisines, selectedFlavors,
+                selectedIntolerances, selectedMealTypes);
+        viewModel.setUserPreferences(userPreference);
+
+        onSubmitPreferences.run();
     }
 
     private void setupChipGroups(View view) {
@@ -193,5 +213,15 @@ public class ChipFragment extends Fragment {
 
     public void setSelectedMealTypes(ArrayList<MealType> selectedMealTypes) {
         this.selectedMealTypes = selectedMealTypes;
+    }
+
+    public void setOnSubmitPreferences(Runnable onSubmitPreferences) {
+        this.onSubmitPreferences = onSubmitPreferences;
+
+        if(shouldShowUserPreference) {
+            return;
+        }
+
+        onSubmitPreferences.run();
     }
 }
