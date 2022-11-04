@@ -67,6 +67,5 @@ public class RecipeViewModel extends AndroidViewModel {
         compositeDisposable.add(recipeFlowable
                 .subscribeOn(Schedulers.io())
                 .subscribe(recipeMutableLiveData::postValue));
-        PagingRx.cachedIn(recipeFlowable, viewModelScope);
     }
 }

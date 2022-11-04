@@ -28,7 +28,6 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/recipeFcv"
-        android:name="com.example.foodapp.ui.fragments.RecipeFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent" />
