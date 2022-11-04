@@ -2,7 +2,6 @@ package com.example.foodapp.ui.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -18,6 +17,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.foodapp.R;
 import com.example.foodapp.viewmodel.RecipeViewModel;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class SearchFragment extends Fragment {
@@ -26,10 +27,10 @@ public class SearchFragment extends Fragment {
     private ImageView userIconIv;
     private ConstraintLayout layout;
     private RecipeViewModel recipeViewModel;
-    public OnUserMenuItemClickListener onUserMenuItemCLickListener = new OnUserMenuItemClickListener();
+    private List<OnUserMenuItemClickListener> onUserMenuItemCLickListenerList = new ArrayList<>();
 
-    public void setOnUserMenuItemCLickListener(@NonNull OnUserMenuItemClickListener onUserMenuItemCLickListener) {
-        this.onUserMenuItemCLickListener = onUserMenuItemCLickListener;
+    public void setOnUserMenuItemCLickListenerList(@NonNull OnUserMenuItemClickListener onUserMenuItemCLickListenerList) {
+        this.onUserMenuItemCLickListenerList.add(onUserMenuItemCLickListenerList);
     }
 
     @Override
@@ -74,16 +75,16 @@ public class SearchFragment extends Fragment {
                     popup.setOnMenuItemClickListener(menuItem -> {
                         switch (menuItem.getItemId()) {
                             case R.id.homeI:
-                                onUserMenuItemCLickListener.onHomeClick();
+                                onUserMenuItemCLickListenerList.forEach(OnUserMenuItemClickListener::onHomeClick);
                                 return true;
                             case R.id.savedRecipesI:
-                                onUserMenuItemCLickListener.onSavedRecipesClick();
+                                onUserMenuItemCLickListenerList.forEach(OnUserMenuItemClickListener::onSavedRecipesClick);
                                 return true;
                             case R.id.userSettingsI:
-                                onUserMenuItemCLickListener.onUserSettingsClick();
+                                onUserMenuItemCLickListenerList.forEach(OnUserMenuItemClickListener::onUserSettingsClick);
                                 return true;
                             case R.id.logOutI:
-                                onUserMenuItemCLickListener.onLogOutClick();
+                                onUserMenuItemCLickListenerList.forEach(OnUserMenuItemClickListener::onLogOutClick);
                                 return true;
                             default:
                                 return false;

@@ -20,14 +20,14 @@ public class HomeFragment extends Fragment {
 
     private CustomMotionLayout layout;
     private SearchFragment searchFragment;
-    private RecipeFragment recipeFragment;
+    private RecipeFragment recipeFragment = new RecipeFragment();
     private SearchFragment.OnUserMenuItemClickListener onUserMenuItemClickListener;
     private Observer<PagingData<Recipe>> recipeObserver;
 
     public void setOnUserMenuItemClickListener(@NonNull SearchFragment.OnUserMenuItemClickListener onUserMenuItemClickListener) {
         this.onUserMenuItemClickListener = onUserMenuItemClickListener;
         if (searchFragment != null) {
-            searchFragment.setOnUserMenuItemCLickListener(onUserMenuItemClickListener);
+            searchFragment.setOnUserMenuItemCLickListenerList(onUserMenuItemClickListener);
         }
     }
 
@@ -74,13 +74,20 @@ public class HomeFragment extends Fragment {
     }
 
     private void bindView() {
-        recipeFragment = (RecipeFragment) getChildFragmentManager().findFragmentById(R.id.recipeFcv);
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.recipeFcv, recipeFragment).commit();
         searchFragment = (SearchFragment) getChildFragmentManager().findFragmentById(R.id.searchFcv);
         if (searchFragment != null) {
             searchFragment.setOnSearchListener(query -> layout.transitionToState(R.id.notSearchCs));
             if (onUserMenuItemClickListener != null) {
-                searchFragment.setOnUserMenuItemCLickListener(onUserMenuItemClickListener);
+                searchFragment.setOnUserMenuItemCLickListenerList(onUserMenuItemClickListener);
             }
+            searchFragment.setOnUserMenuItemCLickListenerList(new SearchFragment.OnUserMenuItemClickListener() {
+                @Override
+                public void onHomeClick() {
+                    layout.transitionToState(R.id.notSearchCs);
+                }
+            });
         }
     }
 }
