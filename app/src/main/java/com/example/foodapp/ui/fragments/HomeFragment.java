@@ -75,7 +75,9 @@ public class HomeFragment extends Fragment {
 
     private void bindView() {
         getChildFragmentManager().beginTransaction()
-                .replace(R.id.recipeFcv, recipeFragment).commit();
+                .replace(R.id.recipeFcv, recipeFragment)
+                .commit();
+
         searchFragment = (SearchFragment) getChildFragmentManager().findFragmentById(R.id.searchFcv);
         if (searchFragment != null) {
             searchFragment.setOnSearchListener(query -> layout.transitionToState(R.id.notSearchCs));
@@ -94,9 +96,5 @@ public class HomeFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
-        recipeFragment = null;
-        searchFragment = null;
-        layout = null;
     }
 }

@@ -81,15 +81,14 @@ public class MainActivity extends AppCompatActivity {
             clearAllFragment();
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragment_container, homeFragment,
-                            RecipeFragment.class.getCanonicalName())
+                    .replace(R.id.fragment_container, homeFragment)
                     .commit();
         });
 
         if (firebaseAuth.getCurrentUser() != null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragment_container, homeFragment)
+                    .replace(R.id.fragment_container, preferenceFragment)
                     .commit();
         } else if (savedInstanceState == null) {
             getSupportFragmentManager()

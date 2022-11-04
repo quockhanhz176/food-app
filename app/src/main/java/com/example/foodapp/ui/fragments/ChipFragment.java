@@ -1,6 +1,7 @@
 package com.example.foodapp.ui.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.example.foodapp.repository.enums.MealType;
 import com.example.foodapp.viewmodel.UserViewModel;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -56,12 +58,12 @@ public class ChipFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-        viewModel.getUserPreferenceLiveData().observe(this, userPreference -> {
-            if(userPreference != null) {
-                shouldShowUserPreference = false;
-            }
+        UserPreference userPreference = viewModel.getUserPreferenceLiveData().getValue();
+        if (userPreference != null) {
+            shouldShowUserPreference = false;
+        } else {
             shouldShowUserPreference = true;
-        });
+        }
     }
 
     @Override
@@ -217,11 +219,10 @@ public class ChipFragment extends Fragment {
 
     public void setOnSubmitPreferences(Runnable onSubmitPreferences) {
         this.onSubmitPreferences = onSubmitPreferences;
+    }
 
-        if(shouldShowUserPreference) {
-            return;
-        }
-
-        onSubmitPreferences.run();
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }
