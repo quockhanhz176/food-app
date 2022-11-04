@@ -1,11 +1,11 @@
 package com.example.foodapp.ui.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,7 +22,6 @@ import com.example.foodapp.repository.enums.MealType;
 import com.example.foodapp.viewmodel.UserViewModel;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -45,7 +44,7 @@ public class ChipFragment extends Fragment {
 
     private UserViewModel viewModel;
 
-    private boolean shouldShowUserPreference;
+    private boolean shouldShowUserPreference = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,13 +56,6 @@ public class ChipFragment extends Fragment {
         selectedMealTypes = new ArrayList<>();
 
         viewModel = new ViewModelProvider(this).get(UserViewModel.class);
-
-        UserPreference userPreference = viewModel.getUserPreferenceLiveData().getValue();
-        if (userPreference != null) {
-            shouldShowUserPreference = false;
-        } else {
-            shouldShowUserPreference = true;
-        }
     }
 
     @Override
@@ -100,6 +92,9 @@ public class ChipFragment extends Fragment {
         UserPreference userPreference = new UserPreference(selectedCuisines, selectedFlavors,
                 selectedIntolerances, selectedMealTypes);
         viewModel.setUserPreferences(userPreference);
+
+        Toast.makeText(this.getContext(), "Preferences set. Fetching your favorite dishes.",
+                Toast.LENGTH_SHORT).show();
 
         onSubmitPreferences.run();
     }

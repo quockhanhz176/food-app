@@ -69,19 +69,24 @@ public class UserRepository {
             throw new InputMismatchException("Invalid email provided");
         }
 
-        currentUser.child("preferences").get().addOnCompleteListener(task -> {
-            if (onComplete == null || !task.isComplete()) {
-                return;
-            }
+        try {
+            currentUser.child("preferences").get().addOnCompleteListener(task -> {
+                if (onComplete == null || !task.isComplete()) {
+                    return;
+                }
 
-            DataSnapshot snapshot = task.getResult();
-            if (!snapshot.exists()) {
-                return;
-            }
+                DataSnapshot snapshot = task.getResult();
+                if (!snapshot.exists()) {
+                    return;
+                }
 
-            UserPreference userPreference = snapshot.getValue(UserPreference.class);
-            onComplete.accept(userPreference);
-        });
+                UserPreference userPreference = snapshot.getValue(UserPreference.class);
+                onComplete.accept(userPreference);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void setRecipes(RecipeType recipeType, List<Integer> recipeIdList,
