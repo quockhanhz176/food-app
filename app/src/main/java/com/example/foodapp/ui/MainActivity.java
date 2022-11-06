@@ -117,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
                         .detach(loginFragment)
                         .attach(loginFragment)
                         .commit();
+                userViewModel.clearData();
             }
 
             @Override
@@ -161,7 +162,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private LoginFragment setupLoginFragment() {
-        loginFragment.setOnLoginSuccess(this::showLoginSuccessFragment);
+        loginFragment.setOnLoginSuccess(() -> {
+            Toast.makeText(this, "Login successfully. Have fun!", Toast.LENGTH_SHORT).show();
+            showLoginSuccessFragment();
+            userViewModel.initData();
+        });
 
         loginFragment.setShowSignUp(() -> {
             signUpFragment = setupSignUpFragment();
@@ -190,7 +195,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showLoginSuccessFragment() {
-        Toast.makeText(this, "Login successfully. Have fun!", Toast.LENGTH_SHORT).show();
 
         clearAllFragment();
         getSupportFragmentManager()
