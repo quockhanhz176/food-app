@@ -22,16 +22,19 @@ import java.util.stream.Collectors;
 
 public class UserViewModel extends AndroidViewModel {
 
-    private final UserRepository userRepository;
     private final MutableLiveData<UserPreference> userPreferenceLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<Integer>> likedRecipeIdListLiveData = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<List<Recipe>> savedRecipeListLiveData = new MutableLiveData<>(new ArrayList<>());
     private final RecipeRepository recipeRepository = RecipeRepository.getInstance();
+    private UserRepository userRepository;
     private List<Recipe> savedRecipeList = new ArrayList<>();
 
     public UserViewModel(@NonNull Application application) {
         super(application);
+        initData();
+    }
 
+    public void initData() {
         FirebaseUser authInfo = FirebaseAuth.getInstance().getCurrentUser();
         if (authInfo == null || authInfo.getEmail() == null || authInfo.getEmail().trim().equals("")) {
             userRepository = null;
@@ -42,6 +45,13 @@ public class UserViewModel extends AndroidViewModel {
         fetchRecipes(RecipeType.LIKED);
         fetchRecipes(RecipeType.SAVED);
         fetchUserPreferences();
+    }
+
+    public void clearData() {
+        userPreferenceLiveData.postValue(null);
+        likedRecipeIdListLiveData.postValue(new ArrayList<>());
+        savedRecipeList = new ArrayList<>();
+        savedRecipeListLiveData.postValue(savedRecipeList);
     }
 
     public void fetchUserPreferences() {
