@@ -51,7 +51,8 @@ public class RecipeRepository {
             @Nullable Collection<Flavor> flavors,
             @Nullable Collection<Intolerance> intolerances,
             @Nullable Collection<MealType> mealTypes,
-            int nextPageNumber
+            int firstRecipeId,
+            int size
     ) {
         String flavorString = flavors == null ? "" :
                 flavors.stream().map(this::transformTag).collect(Collectors.joining(" "));
@@ -64,13 +65,13 @@ public class RecipeRepository {
 
         return recipeRepository.complexSearch(
                 query + " " + flavorString,
-                nextPageNumber - 1,
-                1,
+                firstRecipeId - 1,
+                size,
                 cuisineString,
                 intoleranceString,
                 mealTypeString
-        ).subscribeOn(Schedulers.io()).firstOrError().map(
-                response -> new RecipeResponse(response.getResults(), nextPageNumber)
+        ).firstOrError().map(
+                response -> new RecipeResponse(response.getResults(), firstRecipeId)
         );
     }
 

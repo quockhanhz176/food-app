@@ -1,4 +1,4 @@
-package com.example.foodapp.firebase.entity;
+package com.example.foodapp.repository.firebase.entity;
 
 import com.example.foodapp.viewmodel.utils.Gravatar;
 import com.google.firebase.database.IgnoreExtraProperties;

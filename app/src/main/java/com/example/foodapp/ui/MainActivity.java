@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.foodapp.R;
 import com.example.foodapp.databinding.ActivityMainBinding;
-import com.example.foodapp.firebase.entity.UserPreference;
+import com.example.foodapp.repository.firebase.entity.UserPreference;
 import com.example.foodapp.repository.model.Recipe;
 import com.example.foodapp.ui.fragments.ChipFragment;
 import com.example.foodapp.ui.fragments.HomeFragment;
@@ -41,13 +41,13 @@ public class MainActivity extends AppCompatActivity {
     private UserViewModel userViewModel;
     private AuthViewModel authViewModel;
     private RecipeViewModel recipeViewModel;
-
-    private LoginFragment loginFragment = new LoginFragment();
-    private SignUpFragment signUpFragment = new SignUpFragment();
+//
+//    private LoginFragment loginFragment = new LoginFragment();
+//    private SignUpFragment signUpFragment = new SignUpFragment();
     private final HomeFragment homeFragment = new HomeFragment();
     private final SavedRecipesFragment savedRecipesFragment = new SavedRecipesFragment();
-    private final UserSettingFragment userSettingFragment = new UserSettingFragment();
-    private final ChipFragment preferenceFragment = new ChipFragment();
+//    private final UserSettingFragment userSettingFragment = new UserSettingFragment();
+//    private final ChipFragment preferenceFragment = new ChipFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,24 +76,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupFragments(Bundle savedInstanceState) {
-        loginFragment = setupLoginFragment();
+        LoginFragment loginFragment = setupLoginFragment();
 
-        signUpFragment = setupSignUpFragment();
-
-        preferenceFragment.setOnSubmitPreferences(() -> {
-            clearAllFragment();
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, homeFragment)
-                    .commit();
-        });
+        // temporarily disabling PreferenceFragment
+//        preferenceFragment.setOnSubmitPreferences(() -> {
+//            clearAllFragment();
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .replace(R.id.fragment_container, new HomeFragment())
+//                    .commit();
+//        });
 
         if (firebaseAuth.getCurrentUser() != null) {
             showLoginSuccessFragment();
         } else if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragment_container, loginFragment)
+                    .replace(R.id.fragment_container, new LoginFragment())
                     .commit();
         }
 
@@ -114,8 +113,6 @@ public class MainActivity extends AppCompatActivity {
                 clearAllFragment();
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, loginFragment)
-                        .detach(loginFragment)
-                        .attach(loginFragment)
                         .commit();
                 userViewModel.clearData();
             }
@@ -128,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onUserSettingsClick() {
                 getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,
-                        userSettingFragment).addToBackStack(null).commit();
+                        new UserSettingFragment()).addToBackStack(null).commit();
             }
         });
 
@@ -162,6 +159,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private LoginFragment setupLoginFragment() {
+        LoginFragment loginFragment = new LoginFragment();
+
         loginFragment.setOnLoginSuccess(() -> {
             Toast.makeText(this, "Login successfully. Have fun!", Toast.LENGTH_SHORT).show();
             showLoginSuccessFragment();
@@ -169,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         loginFragment.setShowSignUp(() -> {
-            signUpFragment = setupSignUpFragment();
+            SignUpFragment signUpFragment = setupSignUpFragment();
             getSupportFragmentManager()
                     .beginTransaction().add(R.id.fragment_container,
                             signUpFragment, LoginFragment.class.getCanonicalName())
@@ -181,11 +180,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private SignUpFragment setupSignUpFragment() {
+        SignUpFragment signUpFragment = new SignUpFragment();
+
         signUpFragment.setShowHome(() -> {
             clearAllFragment();
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragment_container, preferenceFragment,
+                    .replace(R.id.fragment_container, homeFragment,
                             ChipFragment.class.getCanonicalName())
                     .commit();
             Toast.makeText(this, "Thank you for signing up. Have fun!", Toast.LENGTH_LONG).show();
@@ -199,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
         clearAllFragment();
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, preferenceFragment,
+                .replace(R.id.fragment_container, homeFragment,
                         ChipFragment.class.getCanonicalName())
                 .commit();
         userViewModel.getUserPreferenceLiveData().observe(this, new Observer<UserPreference>() {

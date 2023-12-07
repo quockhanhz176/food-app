@@ -1,5 +1,7 @@
 package com.example.foodapp.repository;
 
+import static java.lang.Math.max;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.paging.PagingState;
@@ -19,6 +21,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class RecipePagingSource extends RxPagingSource<Integer, Recipe> {
 
+    private static Integer STARTING_KEY = 1;
     @NonNull
     private final RecipeRepository repo;
     @NonNull
@@ -50,25 +53,25 @@ public class RecipePagingSource extends RxPagingSource<Integer, Recipe> {
     public Single<LoadResult<Integer, Recipe>> loadSingle(@NonNull LoadParams<Integer> loadParams) {
 
         // Start refresh at page 1 if undefined.
-        Integer nextPageNumber = loadParams.getKey();
-        if (nextPageNumber == null) {
-            nextPageNumber = 1;
+        Integer recipeId = loadParams.getKey();
+        if (recipeId == null) {
+            recipeId = 1;
         }
 
-        return repo.searchRecipe(query, cuisines, flavors, intolerances, mealTypes, nextPageNumber)
-                .map(this::toLoadResult)
+        return repo.searchRecipe(query, cuisines, flavors, intolerances, mealTypes, recipeId, loadParams.getLoadSize())
+                .map((response) -> {
+                    return toLoadResult(response, loadParams);
+                })
                 .subscribeOn(Schedulers.io())
                 .onErrorReturn(LoadResult.Error::new);
     }
 
     private LoadResult<Integer, Recipe> toLoadResult(
-            @NonNull RecipeResponse response) {
+            @NonNull RecipeResponse response, LoadParams<Integer> loadParams) {
         return new LoadResult.Page<>(
                 response.getRecipeList(),
-                null,
-                response.getKey() + 1,
-                LoadResult.Page.COUNT_UNDEFINED,
-                LoadResult.Page.COUNT_UNDEFINED);
+                response.getKey() > STARTING_KEY ? max(response.getKey() - loadParams.getLoadSize(), STARTING_KEY) : null,
+                response.getKey() + loadParams.getLoadSize());
     }
 
 

@@ -1,12 +1,8 @@
 package com.example.foodapp.repository;
 
-import android.app.Application;
-import android.util.Log;
-import android.widget.Toast;
-
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.foodapp.firebase.FirebaseRepository;
+import com.example.foodapp.repository.firebase.FirebaseRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -47,7 +43,7 @@ public class AuthRepository {
     }
 
     public void logout() {
-        FirebaseAuth.getInstance().signOut();
+        firebaseAuth.signOut();
         userMutableLiveData.postValue(null);
     }
 

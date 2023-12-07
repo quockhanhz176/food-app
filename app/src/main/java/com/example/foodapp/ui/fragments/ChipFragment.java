@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.foodapp.R;
-import com.example.foodapp.firebase.entity.UserPreference;
+import com.example.foodapp.repository.firebase.entity.UserPreference;
 import com.example.foodapp.repository.enums.Cuisine;
 import com.example.foodapp.repository.enums.Flavor;
 import com.example.foodapp.repository.enums.FoodTag;

@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.foodapp.R;
-import com.example.foodapp.firebase.entity.RecipeType;
+import com.example.foodapp.repository.firebase.entity.RecipeType;
 import com.example.foodapp.repository.model.Recipe;
 import com.example.foodapp.ui.adapters.RecipeAdapter;
 import com.example.foodapp.viewmodel.RecipeViewModel;

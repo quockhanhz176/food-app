@@ -1,4 +1,4 @@
-package com.example.foodapp.firebase.entity;
+package com.example.foodapp.repository.firebase.entity;
 
 public enum RecipeType {
     LIKED("liked"),

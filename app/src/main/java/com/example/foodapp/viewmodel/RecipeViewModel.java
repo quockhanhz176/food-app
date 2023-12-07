@@ -58,14 +58,19 @@ public class RecipeViewModel extends AndroidViewModel {
             @Nullable Collection<MealType> mealTypes
     ) {
         compositeDisposable.clear();
-        CoroutineScope viewModelScope = ViewModelKt.getViewModelScope(this);
         Pager<Integer, Recipe> pager = new Pager<>(
-                new PagingConfig(10),
+                new PagingConfig(10, 5, false, 10, 20),
                 () -> new RecipePagingSource(recipeRepository, query, cuisines, flavors, intolerances, mealTypes)
         );
         Flowable<PagingData<Recipe>> recipeFlowable = PagingRx.getFlowable(pager);
         compositeDisposable.add(recipeFlowable
                 .subscribeOn(Schedulers.io())
                 .subscribe(recipeMutableLiveData::postValue));
+    }
+
+    @Override
+    protected void onCleared() {
+        compositeDisposable.clear();
+        super.onCleared();
     }
 }

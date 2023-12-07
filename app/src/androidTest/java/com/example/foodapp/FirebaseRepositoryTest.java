@@ -9,7 +9,7 @@ import android.content.Context;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.example.foodapp.firebase.FirebaseRepository;
+import com.example.foodapp.repository.firebase.FirebaseRepository;
 import com.google.firebase.FirebaseApp;
 
 import org.junit.Test;

@@ -8,9 +8,9 @@ import android.content.Context;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.example.foodapp.firebase.UserRepository;
-import com.example.foodapp.firebase.entity.RecipeType;
-import com.example.foodapp.firebase.entity.UserPreference;
+import com.example.foodapp.repository.firebase.UserRepository;
+import com.example.foodapp.repository.firebase.entity.RecipeType;
+import com.example.foodapp.repository.firebase.entity.UserPreference;
 import com.example.foodapp.repository.enums.Cuisine;
 import com.example.foodapp.repository.enums.Flavor;
 import com.example.foodapp.repository.enums.Intolerance;

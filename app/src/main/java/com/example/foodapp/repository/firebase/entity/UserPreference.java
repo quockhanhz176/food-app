@@ -1,4 +1,4 @@
-package com.example.foodapp.firebase.entity;
+package com.example.foodapp.repository.firebase.entity;
 
 import com.example.foodapp.repository.enums.Cuisine;
 import com.example.foodapp.repository.enums.Flavor;

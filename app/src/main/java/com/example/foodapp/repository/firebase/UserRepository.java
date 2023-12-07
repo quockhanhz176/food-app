@@ -1,10 +1,12 @@
-package com.example.foodapp.firebase;
+package com.example.foodapp.repository.firebase;
+
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.foodapp.firebase.entity.RecipeType;
-import com.example.foodapp.firebase.entity.UserPreference;
+import com.example.foodapp.repository.firebase.entity.RecipeType;
+import com.example.foodapp.repository.firebase.entity.UserPreference;
 import com.example.foodapp.viewmodel.utils.MD5Util;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;

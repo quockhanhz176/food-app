@@ -8,9 +8,9 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.foodapp.firebase.UserRepository;
-import com.example.foodapp.firebase.entity.RecipeType;
-import com.example.foodapp.firebase.entity.UserPreference;
+import com.example.foodapp.repository.firebase.UserRepository;
+import com.example.foodapp.repository.firebase.entity.RecipeType;
+import com.example.foodapp.repository.firebase.entity.UserPreference;
 import com.example.foodapp.repository.RecipeRepository;
 import com.example.foodapp.repository.model.Recipe;
 import com.google.firebase.auth.FirebaseAuth;
