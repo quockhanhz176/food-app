@@ -6,14 +6,19 @@ import com.example.foodapp.repository.firebase.FirebaseRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class AuthRepository {
     private final FirebaseAuth firebaseAuth;
     private final FirebaseRepository firebaseRepository;
     private final MutableLiveData<FirebaseUser> userMutableLiveData;
 
-    public AuthRepository() {
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseRepository = FirebaseRepository.getRealtimeDatabaseInstance();
+    @Inject
+    public AuthRepository(FirebaseRepository firebaseRepository, FirebaseAuth firebaseAuth) {
+        this.firebaseAuth = firebaseAuth;
+        this.firebaseRepository = firebaseRepository;
         userMutableLiveData = new MutableLiveData<>();
     }
 

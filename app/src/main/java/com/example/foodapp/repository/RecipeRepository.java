@@ -1,7 +1,5 @@
 package com.example.foodapp.repository;
 
-import android.util.Log;
-
 import androidx.annotation.Nullable;
 
 import com.example.foodapp.repository.enums.Cuisine;
@@ -15,34 +13,19 @@ import com.example.foodapp.repository.model.RecipeResponse;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 
+@Singleton
 public class RecipeRepository {
+    private final IRecipeService recipeService;
 
-    private static final String RECIPE_BASE_URL = "https://api.spoonacular.com";
-    private final IRecipeRepository recipeRepository;
-
-    private static RecipeRepository instance;
-
-    public synchronized static RecipeRepository getInstance() {
-        if (instance == null) {
-            instance = new RecipeRepository();
-        }
-
-        return instance;
-    }
-
-    private RecipeRepository() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(RECIPE_BASE_URL)
-                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create()).build();
-
-        recipeRepository = retrofit.create(IRecipeRepository.class);
+    @Inject
+    public RecipeRepository(IRecipeService recipeService) {
+        this.recipeService = recipeService;
     }
 
     public Single<RecipeResponse> searchRecipe(
@@ -63,7 +46,7 @@ public class RecipeRepository {
         String mealTypeString = mealTypes == null ? null :
                 mealTypes.stream().map(this::transformTag).collect(Collectors.joining(","));
 
-        return recipeRepository.complexSearch(
+        return recipeService.complexSearch(
                 query + " " + flavorString,
                 firstRecipeId - 1,
                 size,
@@ -76,7 +59,7 @@ public class RecipeRepository {
     }
 
     public Single<Recipe> getRecipeById(int recipeId) {
-        return recipeRepository.getRecipeById(recipeId)
+        return recipeService.getRecipeById(recipeId)
                 .subscribeOn(Schedulers.io())
                 .firstOrError();
     }

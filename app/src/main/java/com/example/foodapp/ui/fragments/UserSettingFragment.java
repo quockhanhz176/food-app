@@ -11,6 +11,9 @@ import androidx.fragment.app.Fragment;
 
 import com.example.foodapp.R;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class UserSettingFragment extends Fragment {
 
     @Nullable

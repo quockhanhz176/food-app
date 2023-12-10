@@ -25,7 +25,9 @@ import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
 
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class ChipFragment extends Fragment {
 
     private ArrayList<Cuisine> selectedCuisines;

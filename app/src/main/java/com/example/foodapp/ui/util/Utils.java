@@ -9,6 +9,7 @@ import android.util.Patterns;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 
 public class Utils {
@@ -23,6 +24,16 @@ public class Utils {
 
     static public boolean isValidEmail(CharSequence target) {
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
+    }
+
+    static public void clearAllFragments(FragmentManager manager) {
+        try {
+            for (int i = 0; i < manager.getBackStackEntryCount(); i++) {
+                manager.popBackStack();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -17,8 +17,12 @@ import com.example.foodapp.ui.adapters.SavedRecipeAdapter;
 import com.example.foodapp.viewmodel.UserViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class SavedRecipesFragment extends Fragment {
 
     private final SavedRecipeAdapter adapter = new SavedRecipeAdapter();
@@ -31,6 +35,7 @@ public class SavedRecipesFragment extends Fragment {
         layout = (ConstraintLayout) inflater.inflate(R.layout.fragment_saved_recipes, container, false);
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         bindView();
+        setItemClickListener();
         return layout;
     }
 
@@ -43,7 +48,17 @@ public class SavedRecipesFragment extends Fragment {
         savedRecipesRv.setAdapter(adapter);
     }
 
-    public void setItemClickListener(Consumer<Recipe> listener) {
-        adapter.setItemOnClickListener(listener);
+    public void setItemClickListener() {
+        adapter.setItemOnClickListener(recipe -> {
+            List<Recipe> recipeList = userViewModel.getSavedRecipeListLiveData().getValue();
+            if (recipeList != null) {
+                int position = recipeList.indexOf(recipe);
+                RecipeFragment recipeFragment = new RecipeFragment();
+                recipeFragment.setRecipeList(new ArrayList<>(recipeList), position == -1 ? null :
+                        position);
+                getParentFragmentManager().beginTransaction().add(R.id.fragment_container,
+                        recipeFragment).addToBackStack(null).commit();
+            }
+        });
     }
 }

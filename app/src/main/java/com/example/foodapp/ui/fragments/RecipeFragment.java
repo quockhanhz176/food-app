@@ -26,6 +26,9 @@ import com.example.foodapp.viewmodel.UserViewModel;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class RecipeFragment extends Fragment {
 
     private ViewPager2 surfVp2;

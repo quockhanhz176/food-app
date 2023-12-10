@@ -13,6 +13,7 @@ import androidx.paging.PagingConfig;
 import androidx.paging.PagingData;
 import androidx.paging.rxjava3.PagingRx;
 
+import com.example.foodapp.repository.IRecipeService;
 import com.example.foodapp.repository.RecipePagingSource;
 import com.example.foodapp.repository.RecipeRepository;
 import com.example.foodapp.repository.enums.Cuisine;
@@ -23,11 +24,15 @@ import com.example.foodapp.repository.model.Recipe;
 
 import java.util.Collection;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import kotlinx.coroutines.CoroutineScope;
 
+@HiltViewModel
 public class RecipeViewModel extends AndroidViewModel {
 
     public LiveData<PagingData<Recipe>> getRecipeLiveData() {
@@ -38,11 +43,13 @@ public class RecipeViewModel extends AndroidViewModel {
 
     private final RecipeRepository recipeRepository;
 
-    private final MutableLiveData<PagingData<Recipe>> recipeMutableLiveData = new MutableLiveData<>();
+    private final MutableLiveData<PagingData<Recipe>> recipeMutableLiveData =
+            new MutableLiveData<>();
 
-    public RecipeViewModel(@NonNull Application application) {
+    @Inject
+    public RecipeViewModel(@NonNull Application application, RecipeRepository recipeRepository) {
         super(application);
-        recipeRepository = RecipeRepository.getInstance();
+        this.recipeRepository = recipeRepository;
         setDefaultSearchParams();
     }
 
@@ -58,14 +65,21 @@ public class RecipeViewModel extends AndroidViewModel {
             @Nullable Collection<MealType> mealTypes
     ) {
         compositeDisposable.clear();
-        Pager<Integer, Recipe> pager = new Pager<>(
-                new PagingConfig(10, 5, false, 10, 20),
-                () -> new RecipePagingSource(recipeRepository, query, cuisines, flavors, intolerances, mealTypes)
+
+        Pager<Integer, Recipe> pager = new Pager<>(new PagingConfig(10, 5, false, 10, 20),
+                () -> new RecipePagingSource(recipeRepository,
+                        query,
+                        cuisines,
+                        flavors,
+                        intolerances,
+                        mealTypes
+                )
         );
+        CoroutineScope viewModelScope = ViewModelKt.getViewModelScope(this);
         Flowable<PagingData<Recipe>> recipeFlowable = PagingRx.getFlowable(pager);
-        compositeDisposable.add(recipeFlowable
-                .subscribeOn(Schedulers.io())
-                .subscribe(recipeMutableLiveData::postValue));
+        compositeDisposable.add(PagingRx.cachedIn(recipeFlowable.subscribeOn(Schedulers.io()),
+                viewModelScope
+        ).subscribe(recipeMutableLiveData::postValue));
     }
 
     @Override

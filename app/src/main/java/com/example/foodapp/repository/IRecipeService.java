@@ -10,7 +10,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-public interface IRecipeRepository {
+public interface IRecipeService {
 
     // References: https://spoonacular.com/food-api/docs#Search-Recipes-Complex
     @Headers({

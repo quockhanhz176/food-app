@@ -15,6 +15,7 @@ import com.example.foodapp.repository.model.Recipe;
 import com.example.foodapp.repository.model.RecipeResponse;
 
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -58,20 +59,27 @@ public class RecipePagingSource extends RxPagingSource<Integer, Recipe> {
             recipeId = 1;
         }
 
-        return repo.searchRecipe(query, cuisines, flavors, intolerances, mealTypes, recipeId, loadParams.getLoadSize())
-                .map((response) -> {
-                    return toLoadResult(response, loadParams);
-                })
-                .subscribeOn(Schedulers.io())
+        return repo.searchRecipe(
+                        query,
+                        cuisines,
+                        flavors,
+                        intolerances,
+                        mealTypes,
+                        recipeId,
+                        loadParams.getLoadSize()
+                ).map((response) -> toLoadResult(response, loadParams)).subscribeOn(Schedulers.io())
                 .onErrorReturn(LoadResult.Error::new);
     }
 
     private LoadResult<Integer, Recipe> toLoadResult(
-            @NonNull RecipeResponse response, LoadParams<Integer> loadParams) {
+            @NonNull RecipeResponse response, LoadParams<Integer> loadParams
+    ) {
         return new LoadResult.Page<>(
                 response.getRecipeList(),
-                response.getKey() > STARTING_KEY ? max(response.getKey() - loadParams.getLoadSize(), STARTING_KEY) : null,
-                response.getKey() + loadParams.getLoadSize());
+                response.getKey() > STARTING_KEY ?
+                        max(response.getKey() - loadParams.getLoadSize(), STARTING_KEY) : null,
+                response.getKey() + loadParams.getLoadSize()
+        );
     }
 
 

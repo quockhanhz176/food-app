@@ -15,22 +15,17 @@ import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class FirebaseRepository {
-    private static FirebaseRepository instance;
 
     private final FirebaseDatabase database;
 
-    private FirebaseRepository() {
-        database =
-                FirebaseDatabase.getInstance(FirebaseConfig.FIREBASE_REALTIME_DATABASE_URL);
-    }
-
-    public synchronized static FirebaseRepository getRealtimeDatabaseInstance() {
-        if (instance == null) {
-            instance = new FirebaseRepository();
-        }
-
-        return instance;
+    @Inject
+    FirebaseRepository(FirebaseDatabase database) {
+        this.database = database;
     }
 
     public void saveNewUser(@NonNull String email, @Nullable Consumer<Task> onComplete) throws InputMismatchException {

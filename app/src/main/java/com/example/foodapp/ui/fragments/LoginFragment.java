@@ -15,6 +15,9 @@ import com.example.foodapp.databinding.FragmentLoginBinding;
 import com.example.foodapp.ui.util.Utils;
 import com.example.foodapp.viewmodel.AuthViewModel;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class LoginFragment extends Fragment {
 
     private FragmentLoginBinding binding;

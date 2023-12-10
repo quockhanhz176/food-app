@@ -14,6 +14,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -21,43 +23,40 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class UserRepository {
 
-    private static UserRepository instance;
-    private final DatabaseReference currentUser;
+    private final FirebaseDatabase database;
 
-    private UserRepository(@NonNull String email) {
-        FirebaseDatabase database =
-                FirebaseDatabase.getInstance(FirebaseConfig.FIREBASE_REALTIME_DATABASE_URL);
+    public @Inject UserRepository(FirebaseDatabase firebaseDatabase) {
+        this.database = firebaseDatabase;
+    }
 
+    public DatabaseReference getUser(String email) {
         String emailHash = MD5Util.md5Hex(email);
         if (emailHash == null) {
-            this.currentUser = null;
-            return;
+            return null;
         }
 
-        this.currentUser = database.getReference("users").child(emailHash);
+        return database.getReference("users").child(emailHash);
     }
 
-    public synchronized static UserRepository getCurrentUser(String email) {
-        if (instance == null) {
-            instance = new UserRepository(email);
-        }
-
-        return instance;
-    }
-
-    public void setUserPreference(UserPreference userPreference,
-                                  @Nullable Consumer<Task> onComplete)
-            throws InputMismatchException {
-        if (currentUser == null) {
-            throw new InputMismatchException("Invalid email provided");
+    public void setUserPreference(
+            @NotNull DatabaseReference user,
+            UserPreference userPreference,
+            @Nullable Consumer<Task> onComplete
+    ) throws InputMismatchException {
+        if (user == null) {
+            throw new InputMismatchException("Parameter user must not be null");
         }
 
         Map<String, Object> userUpdate = new HashMap<>();
         userUpdate.put("preferences", userPreference);
 
-        currentUser.updateChildren(userUpdate).addOnCompleteListener((task) -> {
+        user.updateChildren(userUpdate).addOnCompleteListener((task) -> {
             if (onComplete == null) {
                 return;
             }
@@ -65,14 +64,16 @@ public class UserRepository {
         });
     }
 
-    public void getUserPreference(@Nullable Consumer<UserPreference> onComplete)
-            throws InputMismatchException {
-        if (currentUser == null) {
-            throw new InputMismatchException("Invalid email provided");
+    public void getUserPreference(
+            @NotNull DatabaseReference user,
+            @Nullable Consumer<UserPreference> onComplete
+    ) throws InputMismatchException {
+        if (user == null) {
+            throw new InputMismatchException("Parameter user must not be null");
         }
 
         try {
-            currentUser.child("preferences").get().addOnCompleteListener(task -> {
+            user.child("preferences").get().addOnCompleteListener(task -> {
                 if (onComplete == null || !task.isComplete()) {
                     return;
                 }
@@ -91,26 +92,32 @@ public class UserRepository {
 
     }
 
-    public void setRecipes(RecipeType recipeType, List<Integer> recipeIdList,
-                           @Nullable Consumer<Task> onComplete)
-            throws InputMismatchException {
-        if (onComplete == null || currentUser == null) {
-            throw new InputMismatchException("Invalid email provided");
+    public void setRecipes(
+            @NotNull DatabaseReference user,
+            RecipeType recipeType,
+            List<Integer> recipeIdList,
+            @Nullable Consumer<Task> onComplete
+    ) throws InputMismatchException {
+        if (user == null) {
+            throw new InputMismatchException("Parameter user must not be null");
         }
 
         Map<String, Object> userUpdate = new HashMap<>();
         userUpdate.put(recipeType.value, recipeIdList);
 
-        currentUser.updateChildren(userUpdate).addOnCompleteListener(onComplete::accept);
+        user.updateChildren(userUpdate).addOnCompleteListener(onComplete::accept);
     }
 
-    public void getRecipes(RecipeType recipeType, @Nullable Consumer<List<Integer>> onComplete)
-            throws InputMismatchException {
-        if (currentUser == null) {
-            throw new InputMismatchException("Invalid email provided");
+    public void getRecipes(
+            @NotNull DatabaseReference user,
+            RecipeType recipeType,
+            @Nullable Consumer<List<Integer>> onComplete
+    ) throws InputMismatchException {
+        if (user == null) {
+            throw new InputMismatchException("Parameter user must not be null");
         }
 
-        currentUser.child(recipeType.value).get().addOnCompleteListener(task -> {
+        user.child(recipeType.value).get().addOnCompleteListener(task -> {
             if (onComplete == null || !task.isComplete()) {
                 return;
             }
@@ -121,26 +128,30 @@ public class UserRepository {
             }
 
             GenericTypeIndicator<Map<String, Long>> resultType =
-                    new GenericTypeIndicator<Map<String, Long>>() {
-                    };
+                    new GenericTypeIndicator<Map<String, Long>>() {};
             Map<String, Long> recipeIds = snapshot.getValue(resultType);
-            List<Integer> recipeIdList = recipeIds.values().stream().map(Long::intValue).collect(Collectors.toList());
+            List<Integer> recipeIdList =
+                    recipeIds.values().stream().map(Long::intValue).collect(Collectors.toList());
 
             onComplete.accept(recipeIdList);
         });
     }
 
 
-    public void addRecipe(RecipeType recipeType, int recipeId, @Nullable Consumer<Task> onComplete)
-            throws InputMismatchException {
-        if (currentUser == null) {
-            throw new InputMismatchException("Invalid email provided");
+    public void addRecipe(
+            @NotNull DatabaseReference user,
+            RecipeType recipeType,
+            int recipeId,
+            @Nullable Consumer<Task> onComplete
+    ) throws InputMismatchException {
+        if (user == null) {
+            throw new InputMismatchException("Parameter user must not be null");
         }
 
         Map<String, Object> userUpdate = new HashMap<>();
 
         userUpdate.put("/" + recipeType.value + "/" + recipeId, recipeId);
-        currentUser.updateChildren(userUpdate).addOnCompleteListener(task -> {
+        user.updateChildren(userUpdate).addOnCompleteListener(task -> {
             if (onComplete == null) {
                 return;
             }
@@ -149,17 +160,19 @@ public class UserRepository {
     }
 
     public void deleteRecipeById(
-            RecipeType recipeType, int recipeId,
+            @NotNull DatabaseReference user,
+            RecipeType recipeType,
+            int recipeId,
             @Nullable Consumer<Task> onComplete
     ) throws InputMismatchException {
-        if (currentUser == null) {
-            throw new InputMismatchException("Invalid email provided");
+        if (user == null) {
+            throw new InputMismatchException("Parameter user must not be null");
         }
 
         Map<String, Object> userUpdate = new HashMap<>();
 
         userUpdate.put("/" + recipeType.value + "/" + recipeId, null);
-        currentUser.updateChildren(userUpdate).addOnCompleteListener(task -> {
+        user.updateChildren(userUpdate).addOnCompleteListener(task -> {
             if (onComplete == null) {
                 return;
             }
