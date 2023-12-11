@@ -4,6 +4,9 @@ plugins {
     id 'com.google.dagger.hilt.android'
 }
 
+def apikeyProperties = new Properties()
+apikeyProperties.load(new FileInputStream(rootProject.file("apikey.properties")))
+
 android {
     compileSdk 33
 
@@ -14,6 +17,7 @@ android {
         versionCode 1
         versionName "1.0"
 
+        buildConfigField("String", "RECIPE_KEY", apikeyProperties['RECIPE_KEY'])
         testInstrumentationRunner "androidx.cuisine_layout.runner.AndroidJUnitRunner"
     }
 
@@ -31,6 +35,7 @@ android {
 
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
 }
 
