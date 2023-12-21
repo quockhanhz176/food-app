@@ -9,13 +9,15 @@ import androidx.paging.rxjava3.RxPagingSource;
 
 import com.example.foodapp.repository.enums.Cuisine;
 import com.example.foodapp.repository.enums.Flavor;
+import com.example.foodapp.repository.enums.FoodTag;
 import com.example.foodapp.repository.enums.Intolerance;
 import com.example.foodapp.repository.enums.MealType;
 import com.example.foodapp.repository.model.Recipe;
 import com.example.foodapp.repository.model.RecipeResponse;
+import com.example.foodapp.repository.repositories.RecipeRepository;
 
 import java.util.Collection;
-import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -24,7 +26,7 @@ public class RecipePagingSource extends RxPagingSource<Integer, Recipe> {
 
     private static Integer STARTING_KEY = 1;
     @NonNull
-    private final RecipeRepository repo;
+    private final IRecipeService recipeService;
     @NonNull
     private final String query;
 
@@ -34,14 +36,14 @@ public class RecipePagingSource extends RxPagingSource<Integer, Recipe> {
     private final Collection<MealType> mealTypes;
 
     public RecipePagingSource(
-            @NonNull RecipeRepository repo,
+            @NonNull IRecipeService recipeService,
             @NonNull String query,
             @Nullable Collection<Cuisine> cuisines,
             @Nullable Collection<Flavor> flavors,
             @Nullable Collection<Intolerance> intolerances,
             @Nullable Collection<MealType> mealTypes
     ) {
-        this.repo = repo;
+        this.recipeService = recipeService;
         this.query = query;
         this.cuisines = cuisines;
         this.flavors = flavors;
@@ -58,24 +60,38 @@ public class RecipePagingSource extends RxPagingSource<Integer, Recipe> {
         if (recipeId == null) {
             recipeId = 1;
         }
+        int key = recipeId;
 
-        return repo.searchRecipe(
-                        query,
-                        cuisines,
-                        flavors,
-                        intolerances,
-                        mealTypes,
-                        recipeId,
-                        loadParams.getLoadSize()
-                ).map((response) -> toLoadResult(response, loadParams)).subscribeOn(Schedulers.io())
-                .onErrorReturn(LoadResult.Error::new);
+        String flavorString = flavors == null ? "" :
+                flavors.stream().map(this::transformTag).collect(Collectors.joining(" "));
+        String cuisineString = cuisines == null ? null :
+                cuisines.stream().map(this::transformTag).collect(Collectors.joining(","));
+        String intoleranceString = intolerances == null ? null :
+                intolerances.stream().map(this::transformTag).collect(Collectors.joining(","));
+        String mealTypeString = mealTypes == null ? null :
+                mealTypes.stream().map(this::transformTag).collect(Collectors.joining(","));
+
+
+        return recipeService.complexSearch(query + " " + flavorString,
+                        recipeId - 1,
+                        loadParams.getLoadSize(),
+                        cuisineString,
+                        intoleranceString,
+                        mealTypeString
+                ).firstOrError()
+                .map(response -> toLoadResult(new RecipeResponse(response.getResults(), key),
+                        loadParams
+                )).onErrorReturn(LoadResult.Error::new).subscribeOn(Schedulers.io());
+    }
+
+    private String transformTag(FoodTag tag) {
+        return tag.getValue();
     }
 
     private LoadResult<Integer, Recipe> toLoadResult(
             @NonNull RecipeResponse response, LoadParams<Integer> loadParams
     ) {
-        return new LoadResult.Page<>(
-                response.getRecipeList(),
+        return new LoadResult.Page<>(response.getRecipeList(),
                 response.getKey() > STARTING_KEY ?
                         max(response.getKey() - loadParams.getLoadSize(), STARTING_KEY) : null,
                 response.getKey() + loadParams.getLoadSize()

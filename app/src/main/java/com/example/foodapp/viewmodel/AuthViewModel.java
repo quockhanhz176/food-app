@@ -1,12 +1,9 @@
 package com.example.foodapp.viewmodel;
 
-import android.app.Application;
-
-import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.foodapp.repository.AuthRepository;
+import com.example.foodapp.repository.repositories.AuthRepository;
 import com.google.firebase.auth.FirebaseUser;
 
 import javax.inject.Inject;

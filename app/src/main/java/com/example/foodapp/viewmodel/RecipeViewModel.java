@@ -13,9 +13,8 @@ import androidx.paging.PagingConfig;
 import androidx.paging.PagingData;
 import androidx.paging.rxjava3.PagingRx;
 
-import com.example.foodapp.repository.IRecipeService;
 import com.example.foodapp.repository.RecipePagingSource;
-import com.example.foodapp.repository.RecipeRepository;
+import com.example.foodapp.repository.repositories.RecipeRepository;
 import com.example.foodapp.repository.enums.Cuisine;
 import com.example.foodapp.repository.enums.Flavor;
 import com.example.foodapp.repository.enums.Intolerance;
@@ -38,18 +37,15 @@ public class RecipeViewModel extends AndroidViewModel {
     public LiveData<PagingData<Recipe>> getRecipeLiveData() {
         return recipeMutableLiveData;
     }
-
+    @Inject
+    public RecipeRepository recipeRepository;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
-
-    private final RecipeRepository recipeRepository;
-
     private final MutableLiveData<PagingData<Recipe>> recipeMutableLiveData =
             new MutableLiveData<>();
 
     @Inject
-    public RecipeViewModel(@NonNull Application application, RecipeRepository recipeRepository) {
+    public RecipeViewModel(@NonNull Application application) {
         super(application);
-        this.recipeRepository = recipeRepository;
         setDefaultSearchParams();
     }
 
@@ -67,8 +63,7 @@ public class RecipeViewModel extends AndroidViewModel {
         compositeDisposable.clear();
 
         Pager<Integer, Recipe> pager = new Pager<>(new PagingConfig(10, 5, false, 10, 20),
-                () -> new RecipePagingSource(recipeRepository,
-                        query,
+                () -> recipeRepository.getRecipePagingSource(query,
                         cuisines,
                         flavors,
                         intolerances,

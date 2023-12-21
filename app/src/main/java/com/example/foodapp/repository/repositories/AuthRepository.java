@@ -1,4 +1,4 @@
-package com.example.foodapp.repository;
+package com.example.foodapp.repository.repositories;
 
 import androidx.lifecycle.MutableLiveData;
 
