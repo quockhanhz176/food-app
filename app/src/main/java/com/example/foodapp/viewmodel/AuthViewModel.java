@@ -1,6 +1,5 @@
 package com.example.foodapp.viewmodel;
 
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.foodapp.repository.repositories.AuthRepository;
@@ -9,18 +8,19 @@ import com.google.firebase.auth.FirebaseUser;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
 
 @HiltViewModel
 public class AuthViewModel extends ViewModel {
 
     private final AuthRepository authRepository;
-    private final MutableLiveData<FirebaseUser> userMutableLiveData;
+    private final BehaviorSubject<FirebaseUser> userSubject;
 
     @Inject
     public AuthViewModel(AuthRepository authRepository) {
 
         this.authRepository = authRepository;
-        userMutableLiveData = authRepository.getUserMutableLiveData();
+        userSubject = authRepository.getUserSubject();
     }
 
     public void register(String email, String password) {
@@ -35,8 +35,8 @@ public class AuthViewModel extends ViewModel {
         authRepository.logout();
     }
 
-    public MutableLiveData<FirebaseUser> getUserMutableLiveData() {
-        return userMutableLiveData;
+    public BehaviorSubject<FirebaseUser> getUserSubject() {
+        return userSubject;
     }
 
 }

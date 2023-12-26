@@ -2,8 +2,6 @@ package com.example.foodapp.viewmodel;
 
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.foodapp.repository.firebase.UserRepository;
@@ -11,6 +9,7 @@ import com.example.foodapp.repository.firebase.entity.RecipeType;
 import com.example.foodapp.repository.firebase.entity.UserPreference;
 import com.example.foodapp.repository.repositories.RecipeRepository;
 import com.example.foodapp.repository.model.Recipe;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -22,6 +21,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
 
 @HiltViewModel
 public class UserViewModel extends ViewModel {
@@ -29,11 +29,11 @@ public class UserViewModel extends ViewModel {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
     private final FirebaseAuth firebaseAuth;
-    private final MutableLiveData<UserPreference> userPreferenceLiveData = new MutableLiveData<>();
-    private final MutableLiveData<List<Integer>> likedRecipeIdListLiveData =
-            new MutableLiveData<>(new ArrayList<>());
-    private final MutableLiveData<List<Recipe>> savedRecipeListLiveData =
-            new MutableLiveData<>(new ArrayList<>());
+    private final BehaviorSubject<UserPreference> userPreferenceSubject = BehaviorSubject.create();
+    private final BehaviorSubject<List<Integer>> likedRecipeIdListSubject =
+            BehaviorSubject.create();
+    private final BehaviorSubject<List<Recipe>> savedRecipeListSubject =
+            BehaviorSubject.createDefault(new ArrayList<>());
     private List<Recipe> savedRecipeList = new ArrayList<>();
     private FirebaseUser firebaseUser;
     private DatabaseReference userReference;
@@ -64,17 +64,17 @@ public class UserViewModel extends ViewModel {
     }
 
     public void clearData() {
-        userPreferenceLiveData.postValue(null);
-        likedRecipeIdListLiveData.postValue(new ArrayList<>());
+        userPreferenceSubject.onNext(null);
+        likedRecipeIdListSubject.onNext(new ArrayList<>());
         savedRecipeList = new ArrayList<>();
-        savedRecipeListLiveData.postValue(savedRecipeList);
+        savedRecipeListSubject.onNext(savedRecipeList);
     }
 
     public void fetchUserPreferences() {
         if (userRepository == null) {
             return;
         }
-        userRepository.getUserPreference(userReference, userPreferenceLiveData::postValue);
+        userRepository.getUserPreference(userReference, userPreferenceSubject::onNext);
     }
 
     public void setUserPreferences(UserPreference userPreference) {
@@ -91,13 +91,12 @@ public class UserViewModel extends ViewModel {
         userRepository.getRecipes(
                 userReference,
                 recipeType,
-                recipeType == RecipeType.LIKED ? likedRecipeIdListLiveData::postValue :
+                recipeType == RecipeType.LIKED ? likedRecipeIdListSubject::onNext :
                         recipeList -> recipeList.forEach(id -> recipeRepository.getRecipeById(id)
-                                .doOnError(error -> Log.e("FoodApp", error.toString()))
                                 .subscribe(recipe -> {
                                     savedRecipeList.add(recipe);
-                                    savedRecipeListLiveData.postValue(savedRecipeList);
-                                }))
+                                    savedRecipeListSubject.onNext(savedRecipeList);
+                                }, e -> {}))
         );
     }
 
@@ -113,9 +112,9 @@ public class UserViewModel extends ViewModel {
         );
         if (recipeType == RecipeType.SAVED) {
             savedRecipeList = recipeList;
-            savedRecipeListLiveData.postValue(savedRecipeList);
+            savedRecipeListSubject.onNext(savedRecipeList);
         } else {
-            likedRecipeIdListLiveData.postValue(recipeList.stream().map(Recipe::getId)
+            likedRecipeIdListSubject.onNext(recipeList.stream().map(Recipe::getId)
                     .collect(Collectors.toList()));
         }
     }
@@ -127,18 +126,18 @@ public class UserViewModel extends ViewModel {
         if (recipeType == RecipeType.SAVED) {
             if (savedRecipeList.contains(recipe)) return;
         } else {
-            List<Integer> likedIds = likedRecipeIdListLiveData.getValue();
+            List<Integer> likedIds = likedRecipeIdListSubject.getValue();
             if (likedIds != null && likedIds.contains(recipe.getId())) return;
         }
         try {
             userRepository.addRecipe(userReference, recipeType, recipe.getId(), null);
             if (recipeType == RecipeType.SAVED) {
                 savedRecipeList.add(recipe);
-                savedRecipeListLiveData.postValue(savedRecipeList);
+                savedRecipeListSubject.onNext(savedRecipeList);
             } else {
-                List<Integer> likedList = likedRecipeIdListLiveData.getValue();
+                List<Integer> likedList = likedRecipeIdListSubject.getValue();
                 likedList.add(recipe.getId());
-                likedRecipeIdListLiveData.postValue(likedList);
+                likedRecipeIdListSubject.onNext(likedList);
             }
         } catch (Exception e) {
             Log.e("FoodApp", e.toString());
@@ -153,12 +152,12 @@ public class UserViewModel extends ViewModel {
             userRepository.deleteRecipeById(userReference, recipeType, recipe.getId(), task -> {
                 if (task.isSuccessful() && recipeType == RecipeType.SAVED) {
                     savedRecipeList.remove(recipe);
-                    savedRecipeListLiveData.postValue(savedRecipeList);
+                    savedRecipeListSubject.onNext(savedRecipeList);
                 } else {
-                    List<Integer> likedList = likedRecipeIdListLiveData.getValue();
+                    List<Integer> likedList = likedRecipeIdListSubject.getValue();
                     if (likedList != null) {
                         likedList.removeIf(id -> id == recipe.getId());
-                        likedRecipeIdListLiveData.postValue(likedList);
+                        likedRecipeIdListSubject.onNext(likedList);
                     }
                 }
             });
@@ -168,15 +167,15 @@ public class UserViewModel extends ViewModel {
 
     }
 
-    public LiveData<UserPreference> getUserPreferenceLiveData() {
-        return userPreferenceLiveData;
+    public BehaviorSubject<UserPreference> getUserPreferenceSubject() {
+        return userPreferenceSubject;
     }
 
-    public LiveData<List<Integer>> getLikedRecipeListLiveData() {
-        return likedRecipeIdListLiveData;
+    public BehaviorSubject<List<Integer>> getLikedRecipeSubject() {
+        return likedRecipeIdListSubject;
     }
 
-    public LiveData<List<Recipe>> getSavedRecipeListLiveData() {
-        return savedRecipeListLiveData;
+    public BehaviorSubject<List<Recipe>> getSavedRecipeListSubject() {
+        return savedRecipeListSubject;
     }
 }
