@@ -23,7 +23,6 @@ import com.example.foodapp.viewmodel.RecipeViewModel
 import com.example.foodapp.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.stream.Collectors
 
 @AndroidEntryPoint
@@ -96,7 +95,7 @@ class RecipeFragment : Fragment() {
     }
 
     private fun setupViewPager() {
-        userViewModel.likedRecipeSubject.autoDispose(viewLifecycleOwner.scope())
+        userViewModel.likedRecipeIdListSubject.autoDispose(viewLifecycleOwner.scope())
             .subscribe({ likedRecipeIdList: List<Int> ->
                 adapter.setLikedRecipeIdList(
                     likedRecipeIdList
@@ -107,14 +106,14 @@ class RecipeFragment : Fragment() {
                 adapter.setSavedRecipeIdList(list.stream().map { obj: Recipe -> obj.id }
                     .collect(Collectors.toList()))
             }, {})
-        adapter.setOnLikeButtonCheckedChange { recipe: Recipe?, newCheckState: Boolean ->
+        adapter.setOnLikeButtonCheckedChange { recipe: Recipe, newCheckState: Boolean ->
             if (newCheckState) {
                 userViewModel.addNewRecipe(RecipeType.LIKED, recipe)
             } else {
                 userViewModel.removeRecipe(RecipeType.LIKED, recipe)
             }
         }
-        adapter.setOnSaveButtonCheckedChange { recipe: Recipe?, newCheckState: Boolean ->
+        adapter.setOnSaveButtonCheckedChange { recipe: Recipe, newCheckState: Boolean ->
             if (newCheckState) {
                 userViewModel.addNewRecipe(RecipeType.SAVED, recipe)
             } else {

@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.foodapp.repository.firebase.entity.User;
-import com.example.foodapp.viewmodel.utils.MD5Util;
+import com.example.foodapp.viewmodel.utils.MD5Utils;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -33,7 +33,7 @@ public class FirebaseRepository {
 
         User newUser = new User(email, "", null);
 
-        String emailHash = MD5Util.md5Hex(email);
+        String emailHash = MD5Utils.md5Hex(email);
         if (emailHash == null) {
             throw new InputMismatchException("Not a valid email address");
         }
@@ -52,7 +52,7 @@ public class FirebaseRepository {
     public void fetchUser(String email, @Nullable Consumer<User> onComplete) {
         DatabaseReference userReference = database.getReference("users");
 
-        String emailHash = MD5Util.md5Hex(email);
+        String emailHash = MD5Utils.md5Hex(email);
         if (emailHash == null) {
             throw new InputMismatchException("Not a valid email address");
         }

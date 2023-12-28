@@ -16,6 +16,7 @@ import com.example.foodapp.repository.model.Recipe
 import com.example.foodapp.ui.adapters.SavedRecipeAdapter
 import com.example.foodapp.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.core.BackpressureStrategy
 
 @AndroidEntryPoint
 class SavedRecipesFragment : Fragment() {
@@ -37,7 +38,9 @@ class SavedRecipesFragment : Fragment() {
 
     private fun bindView() {
         savedRecipesRv = layout?.findViewById(R.id.savedRecipesRv)
-        userViewModel.savedRecipeListSubject.autoDispose(viewLifecycleOwner.scope())
+        userViewModel.savedRecipeListSubject
+            .toFlowable(BackpressureStrategy.LATEST)
+            .autoDispose(viewLifecycleOwner.scope())
             .subscribe { list ->
                 adapter.submitList(list)
             }
@@ -45,7 +48,7 @@ class SavedRecipesFragment : Fragment() {
             2,
             StaggeredGridLayoutManager.VERTICAL
         )
-        savedRecipesRv?.setAdapter(adapter)
+        savedRecipesRv?.adapter = adapter
     }
 
     private fun setItemClickListener() {

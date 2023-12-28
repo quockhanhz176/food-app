@@ -60,18 +60,11 @@ public class Recipe {
     @NonNull
     @Override
     public String toString() {
-        return "Recipe{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", image='" + image + '\'' +
-                ", imageType='" + imageType + '\'' +
-                ", readyInMinutes=" + readyInMinutes +
-                ", servings=" + servings +
-                ", healthScore=" + healthScore +
-                ", cuisines=" + cuisines +
-                ", summary='" + summary + '\'' +
-                ", analyzedInstructions=" + analyzedInstructions +
-                '}';
+        return "Recipe{" + "id=" + id + ", title='" + title + '\'' + ", image='" + image + '\'' +
+                ", imageType='" + imageType + '\'' + ", readyInMinutes=" + readyInMinutes +
+                ", servings=" + servings + ", healthScore=" + healthScore + ", cuisines=" +
+                cuisines + ", summary='" + summary + '\'' + ", analyzedInstructions=" +
+                analyzedInstructions + '}';
     }
 
     @Override
@@ -88,7 +81,16 @@ public class Recipe {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, image, imageType, readyInMinutes, servings, healthScore,
-                cuisines, analyzedInstructions);
+        return Objects.hash(
+                id,
+                title,
+                image,
+                imageType,
+                readyInMinutes,
+                servings,
+                healthScore,
+                cuisines,
+                analyzedInstructions
+        );
     }
 }

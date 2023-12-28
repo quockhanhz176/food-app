@@ -4,7 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class MD5Util {
+public class MD5Utils {
     public static String hex(byte[] array) {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < array.length; ++i) {

@@ -15,8 +15,7 @@ import java.util.Collection;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import io.reactivex.rxjava3.core.Single;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Observable;
 
 @Singleton
 public class RecipeRepository {
@@ -43,7 +42,7 @@ public class RecipeRepository {
         );
     }
 
-    public Single<Recipe> getRecipeById(int recipeId) {
-        return recipeService.getRecipeById(recipeId).subscribeOn(Schedulers.io()).firstOrError();
+    public Observable<Recipe> getRecipeById(int recipeId) {
+        return recipeService.getRecipeById(recipeId);
     }
 }

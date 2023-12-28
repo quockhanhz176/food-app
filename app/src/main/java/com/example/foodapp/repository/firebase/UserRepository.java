@@ -1,13 +1,10 @@
 package com.example.foodapp.repository.firebase;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.foodapp.repository.firebase.entity.RecipeType;
 import com.example.foodapp.repository.firebase.entity.UserPreference;
-import com.example.foodapp.viewmodel.utils.MD5Util;
+import com.example.foodapp.viewmodel.utils.MD5Utils;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -36,7 +33,7 @@ public class UserRepository {
     }
 
     public DatabaseReference getUser(String email) {
-        String emailHash = MD5Util.md5Hex(email);
+        String emailHash = MD5Utils.md5Hex(email);
         if (emailHash == null) {
             return null;
         }

@@ -22,6 +22,6 @@ public class Gravatar {
     }
 
     public String getAvatarUrl() {
-        return GRAVATAR_BASE_URL + MD5Util.md5Hex(this.email) + GRAVATAR_DEFAULT_CONFIG;
+        return GRAVATAR_BASE_URL + MD5Utils.md5Hex(this.email) + GRAVATAR_DEFAULT_CONFIG;
     }
 }
