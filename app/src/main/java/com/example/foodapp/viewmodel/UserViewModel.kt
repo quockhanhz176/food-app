@@ -11,11 +11,10 @@ import com.example.foodapp.viewmodel.utils.plusAssign
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Observable.combineLatest
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import java.util.function.Predicate
 import java.util.stream.Collectors
 import javax.inject.Inject
 
@@ -66,29 +65,19 @@ class UserViewModel @Inject constructor(
     }
 
     fun fetchRecipes(recipeType: RecipeType) {
-        val nullRecipe = Recipe();
         userReference?.also { userReference ->
             userRepository.getRecipes(userReference,
                 recipeType,
                 if (recipeType == RecipeType.LIKED) { likedRecipeIds ->
                     likedRecipeIdListSubject.onNext(likedRecipeIds)
                 } else { savedRecipeIds ->
-                    compositeDisposable += combineLatest(savedRecipeIds.map {
-                        (recipeRepository.getRecipeById(it)).startWithItem(nullRecipe)
-                    }) { recipes ->
-                        recipes.filterIsInstance<Recipe>().filter { it != nullRecipe }
-                    }.skipWhile { it.isEmpty() }
+                    compositeDisposable += Observable.fromIterable(savedRecipeIds)
+                        .concatMapEagerDelayError({
+                            recipeRepository.getRecipeById(it).subscribeOn(Schedulers.io())
+                        }, true)
+                        .scan(listOf<Recipe>()) { list, recipe -> list + recipe }
                         .subscribeOn(Schedulers.io())
-                        .subscribe({ recipeList ->
-                            savedRecipeListSubject.onNext(recipeList)
-                        }, { })
-//                    savedRecipeIds.forEach { id ->
-//                        compositeDisposable += recipeRepository.getRecipeById(id)
-//                            .subscribe({ recipe: Recipe ->
-//                                savedRecipeList.add(recipe)
-//                                savedRecipeListSubject.onNext(savedRecipeList)
-//                            }, { })
-//                    }
+                        .subscribe(savedRecipeListSubject::onNext)
                 })
         }
     }
@@ -145,7 +134,11 @@ class UserViewModel @Inject constructor(
                     if (task.isSuccessful && recipeType == RecipeType.SAVED) {
                         savedRecipeListSubject.onNext(savedRecipeListSubject.value?.minus(recipe))
                     } else {
-                        likedRecipeIdListSubject.onNext(likedRecipeIdListSubject.value?.minus(recipe.id))
+                        likedRecipeIdListSubject.onNext(
+                            likedRecipeIdListSubject.value?.minus(
+                                recipe.id
+                            )
+                        )
                     }
                 }
             } catch (e: Exception) {

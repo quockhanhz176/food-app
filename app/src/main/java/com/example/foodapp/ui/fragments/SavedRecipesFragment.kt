@@ -16,6 +16,7 @@ import com.example.foodapp.repository.model.Recipe
 import com.example.foodapp.ui.adapters.SavedRecipeAdapter
 import com.example.foodapp.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.BackpressureStrategy
 
 @AndroidEntryPoint
@@ -40,6 +41,7 @@ class SavedRecipesFragment : Fragment() {
         savedRecipesRv = layout?.findViewById(R.id.savedRecipesRv)
         userViewModel.savedRecipeListSubject
             .toFlowable(BackpressureStrategy.LATEST)
+            .observeOn(AndroidSchedulers.mainThread())
             .autoDispose(viewLifecycleOwner.scope())
             .subscribe { list ->
                 adapter.submitList(list)
@@ -53,20 +55,17 @@ class SavedRecipesFragment : Fragment() {
 
     private fun setItemClickListener() {
         adapter.setItemOnClickListener { recipe: Recipe ->
-            val recipeList: List<Recipe>? =
-                userViewModel.savedRecipeListSubject.value;
-            if (recipeList != null) {
-                val position = recipeList.indexOf(recipe)
-                val recipeFragment = RecipeFragment()
-                recipeFragment.setRecipeList(
-                    ArrayList(recipeList),
-                    if (position == -1) null else position
-                )
-                parentFragmentManager.beginTransaction().add(
-                    R.id.fragment_container,
-                    recipeFragment
-                ).addToBackStack(null).commit()
-            }
+            val recipeList: List<Recipe> = adapter.currentList
+            val position = recipeList.indexOf(recipe)
+            val recipeFragment = RecipeFragment()
+            recipeFragment.setRecipeList(
+                ArrayList(recipeList),
+                if (position == -1) null else position
+            )
+            parentFragmentManager.beginTransaction().add(
+                R.id.fragment_container,
+                recipeFragment
+            ).addToBackStack(null).commit()
         }
     }
 }
