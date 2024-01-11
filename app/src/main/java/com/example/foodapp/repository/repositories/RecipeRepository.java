@@ -2,7 +2,7 @@ package com.example.foodapp.repository.repositories;
 
 import androidx.annotation.Nullable;
 
-import com.example.foodapp.repository.IRecipeService;
+import com.example.foodapp.repository.network.IRecipeService;
 import com.example.foodapp.repository.RecipePagingSource;
 import com.example.foodapp.repository.enums.Cuisine;
 import com.example.foodapp.repository.enums.Flavor;

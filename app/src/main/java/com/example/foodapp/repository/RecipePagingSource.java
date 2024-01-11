@@ -14,7 +14,7 @@ import com.example.foodapp.repository.enums.Intolerance;
 import com.example.foodapp.repository.enums.MealType;
 import com.example.foodapp.repository.model.Recipe;
 import com.example.foodapp.repository.model.RecipeResponse;
-import com.example.foodapp.repository.repositories.RecipeRepository;
+import com.example.foodapp.repository.network.IRecipeService;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -24,12 +24,11 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class RecipePagingSource extends RxPagingSource<Integer, Recipe> {
 
-    private static Integer STARTING_KEY = 1;
+    private static final Integer STARTING_KEY = 1;
     @NonNull
     private final IRecipeService recipeService;
     @NonNull
     private final String query;
-
     private final Collection<Cuisine> cuisines;
     private final Collection<Flavor> flavors;
     private final Collection<Intolerance> intolerances;

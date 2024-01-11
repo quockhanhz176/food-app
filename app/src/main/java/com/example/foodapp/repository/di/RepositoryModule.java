@@ -1,9 +1,9 @@
 package com.example.foodapp.repository.di;
 
-import static com.example.foodapp.repository.Constants.RECIPE_BASE_URL;
-
-import com.example.foodapp.repository.IRecipeService;
+import com.example.foodapp.repository.network.IRecipeService;
 import com.example.foodapp.repository.firebase.FirebaseConfig;
+import com.example.foodapp.repository.network.OkHttpInterceptorProvider;
+import com.example.foodapp.repository.network.OkHttpServiceProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -13,9 +13,7 @@ import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
+import okhttp3.Interceptor;
 
 @Module
 @InstallIn(SingletonComponent.class)
@@ -34,10 +32,22 @@ public class RepositoryModule {
 
     @Singleton
     @Provides
-    public static IRecipeService provideIRecipeService() {
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(RECIPE_BASE_URL)
-                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create()).build();
-        return retrofit.create(IRecipeService.class);
+    public static IRecipeService provideIRecipeService(
+            @OkHttpContentTypeInterceptor Interceptor contentTypeInterceptor,
+            @OkHttpAuthInterceptor Interceptor authInterceptor
+    ) {
+        return OkHttpServiceProvider.getRecipeService(contentTypeInterceptor, authInterceptor);
+    }
+
+    @OkHttpAuthInterceptor
+    @Provides
+    public static Interceptor provideAuthInterceptor() {
+        return OkHttpInterceptorProvider.getApiKeyInterceptor();
+    }
+
+    @OkHttpContentTypeInterceptor
+    @Provides
+    public static Interceptor provideContentTypeInterceptor() {
+        return OkHttpInterceptorProvider.getContentTypeInterceptor();
     }
 }

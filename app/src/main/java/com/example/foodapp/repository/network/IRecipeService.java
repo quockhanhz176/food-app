@@ -1,23 +1,16 @@
-package com.example.foodapp.repository;
+package com.example.foodapp.repository.network;
 
-import com.example.foodapp.AppConfig;
 import com.example.foodapp.repository.model.Recipe;
 import com.example.foodapp.repository.model.RecipeResult;
 
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface IRecipeService {
 
     // References: https://spoonacular.com/food-api/docs#Search-Recipes-Complex
-    @Headers({
-            "Accept: application/json",
-            "User-Agent: FoodApp",
-            "x-api-key: " + AppConfig.RECIPE_API_KEY,
-    })
     @GET("recipes/complexSearch?instructionsRequired=true" +
             "&addRecipeInformation=true")
     Observable<RecipeResult> complexSearch(
@@ -30,11 +23,6 @@ public interface IRecipeService {
     );
 
     // References: https://spoonacular.com/food-api/docs#Get-Recipe-Information
-    @Headers({
-            "Accept: application/json",
-            "User-Agent: FoodApp",
-            "x-api-key: " + AppConfig.RECIPE_API_KEY,
-    })
     @GET("recipes/{id}/information")
     Observable<Recipe> getRecipeById(@Path("id") int recipeId);
 }
