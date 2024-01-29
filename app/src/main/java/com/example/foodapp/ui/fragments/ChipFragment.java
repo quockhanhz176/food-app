@@ -6,19 +6,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.example.foodapp.R;
-import com.example.foodapp.repository.firebase.entity.UserPreference;
 import com.example.foodapp.repository.enums.Cuisine;
 import com.example.foodapp.repository.enums.Flavor;
 import com.example.foodapp.repository.enums.FoodTag;
 import com.example.foodapp.repository.enums.Intolerance;
 import com.example.foodapp.repository.enums.MealType;
+import com.example.foodapp.repository.firebase.entity.UserPreference;
 import com.example.foodapp.viewmodel.UserViewModel;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -34,19 +32,13 @@ public class ChipFragment extends Fragment {
     private ArrayList<Flavor> selectedFlavors;
     private ArrayList<Intolerance> selectedIntolerances;
     private ArrayList<MealType> selectedMealTypes;
-
     private ChipGroup cuisineGroup;
     private ChipGroup flavorGroup;
     private ChipGroup intoleranceGroup;
     private ChipGroup mealTypeGroup;
-
     private Button submitBtn;
-
     private Runnable onSubmitPreferences;
-
     private UserViewModel viewModel;
-
-    private boolean shouldShowUserPreference = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,7 +66,7 @@ public class ChipFragment extends Fragment {
         bindingView(view);
         bindingAction();
 
-        setupChipGroups(view);
+        setupChipGroups();
     }
 
     private void bindingView(View view) {
@@ -101,7 +93,7 @@ public class ChipFragment extends Fragment {
         onSubmitPreferences.run();
     }
 
-    private void setupChipGroups(View view) {
+    private void setupChipGroups() {
         Cuisine[] cuisines = Cuisine.values();
         for (Cuisine cuisine : cuisines) {
             cuisineGroup.addView(generatePreferenceChip(cuisine, cuisineGroup));

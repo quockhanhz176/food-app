@@ -1,7 +1,7 @@
 package com.example.foodapp.repository.di;
 
-import com.example.foodapp.repository.network.IRecipeService;
 import com.example.foodapp.repository.firebase.FirebaseConfig;
+import com.example.foodapp.repository.network.IRecipeService;
 import com.example.foodapp.repository.network.OkHttpInterceptorProvider;
 import com.example.foodapp.repository.network.OkHttpServiceProvider;
 import com.google.firebase.auth.FirebaseAuth;

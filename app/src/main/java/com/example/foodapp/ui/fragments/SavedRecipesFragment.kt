@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import autodispose2.androidx.lifecycle.scope
@@ -56,16 +57,9 @@ class SavedRecipesFragment : Fragment() {
     private fun setItemClickListener() {
         adapter.setItemOnClickListener { recipe: Recipe ->
             val recipeList: List<Recipe> = adapter.currentList
-            val position = recipeList.indexOf(recipe)
-            val recipeFragment = RecipeFragment()
-            recipeFragment.setRecipeList(
-                ArrayList(recipeList),
-                if (position == -1) null else position
-            )
-            parentFragmentManager.beginTransaction().add(
-                R.id.fragment_container,
-                recipeFragment
-            ).addToBackStack(null).commit()
+            val action = SavedRecipesFragmentDirections.actionSavedToSwipe()
+            action.position = recipeList.indexOf(recipe)
+            findNavController().navigate(action)
         }
     }
 }

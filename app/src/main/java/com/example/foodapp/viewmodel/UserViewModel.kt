@@ -9,6 +9,7 @@ import com.example.foodapp.repository.model.Recipe
 import com.example.foodapp.repository.repositories.RecipeRepository
 import com.example.foodapp.viewmodel.utils.plusAssign
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
@@ -25,6 +26,7 @@ class UserViewModel @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
 ) : ViewModel() {
     val userPreferenceSubject = BehaviorSubject.create<UserPreference?>()
+    val firebaseUserSubject = BehaviorSubject.create<FirebaseUser?>()
     val likedRecipeIdListSubject = BehaviorSubject.createDefault<List<Int>>(listOf())
     val savedRecipeListSubject = BehaviorSubject.createDefault<List<Recipe>>(listOf())
     private var userReference: DatabaseReference? = null
@@ -36,6 +38,9 @@ class UserViewModel @Inject constructor(
 
     fun initData() {
         val firebaseUser = firebaseAuth.currentUser
+        if(firebaseUser != null){
+            firebaseUserSubject.onNext(firebaseUser)
+        }
         if (firebaseUser != null && firebaseUser.email != null && firebaseUser.email?.trim { it <= ' ' } != "") {
             userReference = userRepository.getUser(firebaseUser.email)
             fetchRecipes(RecipeType.LIKED)

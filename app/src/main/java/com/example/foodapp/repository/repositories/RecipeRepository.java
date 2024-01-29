@@ -2,13 +2,13 @@ package com.example.foodapp.repository.repositories;
 
 import androidx.annotation.Nullable;
 
-import com.example.foodapp.repository.network.IRecipeService;
 import com.example.foodapp.repository.RecipePagingSource;
 import com.example.foodapp.repository.enums.Cuisine;
 import com.example.foodapp.repository.enums.Flavor;
 import com.example.foodapp.repository.enums.Intolerance;
 import com.example.foodapp.repository.enums.MealType;
 import com.example.foodapp.repository.model.Recipe;
+import com.example.foodapp.repository.network.IRecipeService;
 
 import java.util.Collection;
 

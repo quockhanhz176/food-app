@@ -4,9 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import autodispose2.androidx.lifecycle.scope
 import autodispose2.autoDispose
 import com.example.foodapp.R
@@ -19,27 +20,30 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 @AndroidEntryPoint
 class SignUpFragment : Fragment() {
-    var showHome: Runnable? = null
 
     private lateinit var binding: FragmentSignUpBinding
     private val viewModel: AuthViewModel by viewModels({ requireActivity() })
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.userSubject.observeOn(AndroidSchedulers.mainThread())
-            .autoDispose(viewLifecycleOwner.scope())
-            .subscribe { firebaseUser: FirebaseUser? ->
-                if (firebaseUser != null && showHome != null && activity != null) {
-                    showHome
-                }
-            }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentSignUpBinding.inflate(inflater, container, false)
         setupView()
+
+        viewModel.userSubject.observeOn(AndroidSchedulers.mainThread())
+            .autoDispose(viewLifecycleOwner.scope())
+            .subscribe { firebaseUser: FirebaseUser? ->
+                if (firebaseUser != null && activity != null) {
+                    findNavController().popBackStack(R.id.main, false)
+                    Toast.makeText(
+                        context,
+                        "Thank you for signing up. Have fun!",
+                        Toast.LENGTH_LONG
+                    )
+                        .show()
+                }
+            }
+
         return binding.root
     }
 
@@ -49,9 +53,13 @@ class SignUpFragment : Fragment() {
         val spannableString =
             Utils.setColorString(fullString, partString, requireContext(), R.color.orange)
         binding.tvLogin.text = spannableString
-        binding.tvLogin.setOnClickListener { view: View? -> requireActivity().supportFragmentManager.popBackStack() }
-        binding.cvBack.setOnClickListener { view: View? -> requireActivity().supportFragmentManager.popBackStack() }
-        binding.btSignUp.setOnClickListener { view: View? ->
+        binding.tvLogin.setOnClickListener {
+            findNavController().navigate(SignUpFragmentDirections.actionSignupToLogin())
+        }
+        binding.cvBack.setOnClickListener {
+            findNavController().navigate(SignUpFragmentDirections.actionSignupToLogin())
+        }
+        binding.btSignUp.setOnClickListener {
             val email = binding.edtEmail.text.toString().trim { it <= ' ' }
             val password = binding.edtPassword.text.toString().trim { it <= ' ' }
             if (validateEditText()) {

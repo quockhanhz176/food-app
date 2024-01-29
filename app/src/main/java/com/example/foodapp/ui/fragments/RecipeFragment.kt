@@ -29,14 +29,10 @@ import java.util.stream.Collectors
 class RecipeFragment : Fragment() {
     private val recipeViewModel: RecipeViewModel by viewModels({ requireActivity() })
     private val userViewModel: UserViewModel by viewModels({ requireActivity() })
-
     private lateinit var surfVp2: ViewPager2
     private var surfVp2lastPosition = -1
     private var adapter: RecipeAdapter
     private var recipeDetailTransitionListener: MotionLayout.TransitionListener? = null
-    private var isSavedRecipeList = false
-    private var savedRecipeList: List<Recipe>? = null
-    private var itemPosition: Int? = null
 
     init {
         adapter = RecipeAdapter(object : MotionLayout.TransitionListener {
@@ -74,16 +70,6 @@ class RecipeFragment : Fragment() {
 
     fun setRecipeDetailTransitionListener(recipeDetailTransitionListener: MotionLayout.TransitionListener?) {
         this.recipeDetailTransitionListener = recipeDetailTransitionListener
-    }
-
-    fun setRecipeList(list: List<Recipe>?, position: Int?) {
-        isSavedRecipeList = true
-        savedRecipeList = list
-        itemPosition = position
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -139,6 +125,8 @@ class RecipeFragment : Fragment() {
                 }
             }
         })
+        val itemPosition = arguments?.getInt("position", -1) ?: -1
+        val isSavedRecipeList = itemPosition != -1
         if (!isSavedRecipeList) {
             recipeViewModel.recipePagingDataSubject
                 .observeOn(AndroidSchedulers.mainThread())
@@ -149,11 +137,9 @@ class RecipeFragment : Fragment() {
         } else {
             adapter.submitData(
                 viewLifecycleOwner.lifecycle,
-                PagingData.from<Recipe>(savedRecipeList ?: arrayListOf())
+                PagingData.from<Recipe>(userViewModel.savedRecipeListSubject.value ?: arrayListOf())
             )
-            if (itemPosition != null) {
-                surfVp2.post { surfVp2.setCurrentItem(itemPosition ?: -1, false) }
-            }
+            surfVp2.post { surfVp2.setCurrentItem(itemPosition, false) }
         }
     }
 }

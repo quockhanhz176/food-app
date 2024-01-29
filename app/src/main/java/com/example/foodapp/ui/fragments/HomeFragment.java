@@ -5,17 +5,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.paging.PagingData;
-
+import androidx.navigation.fragment.NavHostFragment;
 import com.example.foodapp.R;
-import com.example.foodapp.repository.model.Recipe;
 import com.example.foodapp.ui.customviews.CustomMotionLayout;
 import com.example.foodapp.viewmodel.AuthViewModel;
 import com.example.foodapp.viewmodel.RecipeViewModel;
@@ -27,15 +23,14 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class HomeFragment extends Fragment {
 
     private CustomMotionLayout layout;
-    private SearchFragment searchFragment;
-    private RecipeFragment recipeFragment = new RecipeFragment();
+    private final RecipeFragment recipeFragment = new RecipeFragment();
     private AuthViewModel authViewModel;
     private UserViewModel userViewModel;
     private RecipeViewModel recipeViewModel;
-    private Runnable onLogOutListener;
 
-    public void setOnLogOutListener(Runnable onLogOutListener) {
-        this.onLogOutListener = onLogOutListener;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -44,34 +39,37 @@ public class HomeFragment extends Fragment {
         authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         recipeViewModel = new ViewModelProvider(requireActivity()).get(RecipeViewModel.class);
+        if (userViewModel.getFirebaseUserSubject().getValue() == null) {
+            NavHostFragment.findNavController(HomeFragment.this)
+                    .navigate(HomeFragmentDirections.actionHomeToLoginGraph());
+        }
     }
 
     private final SearchFragment.OnUserMenuItemClickListener onUserMenuItemClickListener =
             new SearchFragment.OnUserMenuItemClickListener() {
                 @Override
                 public void onSavedRecipesClick() {
-                    getParentFragmentManager().beginTransaction()
-                            .add(R.id.fragment_container, new SavedRecipesFragment())
-                            .addToBackStack(null).commit();
+                    NavHostFragment.findNavController(HomeFragment.this)
+                            .navigate(HomeFragmentDirections.actionHomeToSaved());
                 }
 
                 @Override
                 public void onLogOutClick() {
-                    if (onLogOutListener != null) {
-                        onLogOutListener.run();
-                    }
+                    authViewModel.logout();
+                    NavHostFragment.findNavController(HomeFragment.this)
+                            .navigate(HomeFragmentDirections.actionHomeToLoginGraph());
                 }
 
                 @Override
                 public void onHomeClick() {
                     recipeViewModel.setDefaultSearchParams();
+                    layout.transitionToState(R.id.notSearchCs);
                 }
 
                 @Override
                 public void onUserSettingsClick() {
-                    getParentFragmentManager().beginTransaction()
-                            .add(R.id.fragment_container, new UserSettingFragment())
-                            .addToBackStack(null).commit();
+                    NavHostFragment.findNavController(HomeFragment.this)
+                            .navigate(HomeFragmentDirections.actionHomeToSettings());
                 }
             };
 
@@ -130,17 +128,11 @@ public class HomeFragment extends Fragment {
         getChildFragmentManager().beginTransaction().replace(R.id.recipeFcv, recipeFragment)
                 .commit();
 
-        searchFragment =
+        SearchFragment searchFragment =
                 (SearchFragment) getChildFragmentManager().findFragmentById(R.id.searchFcv);
         if (searchFragment != null) {
             searchFragment.setOnSearchListener(query -> layout.transitionToState(R.id.notSearchCs));
-            searchFragment.setOnUserMenuItemCLickListenerList(onUserMenuItemClickListener);
-            searchFragment.setOnUserMenuItemCLickListenerList(new SearchFragment.OnUserMenuItemClickListener() {
-                @Override
-                public void onHomeClick() {
-                    layout.transitionToState(R.id.notSearchCs);
-                }
-            });
+            searchFragment.setOnUserMenuItemCLickListener(onUserMenuItemClickListener);
         }
     }
 }
